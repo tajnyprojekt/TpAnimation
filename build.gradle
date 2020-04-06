@@ -1,0 +1,56 @@
+group 'com.tajnyprojekt'
+version '1.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile "org.jogamp.gluegen:gluegen-rt:2.3.2"
+    compile "org.jogamp.jogl:jogl-all:2.3.2"
+
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-android-aarch64"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-android-armv6"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-linux-amd64"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-linux-armv6"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-linux-armv6hf"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-linux-i586"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-macosx-universal"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-solaris-amd64"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-solaris-i586"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-windows-amd64"
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-windows-i586"
+
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-android-aarch64"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-android-armv6"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-linux-amd64"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-linux-armv6"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-linux-armv6hf"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-linux-i586"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-macosx-universal"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-solaris-amd64"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-solaris-i586"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-windows-amd64"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-windows-i586"
+
+    // https://mvnrepository.com/artifact/org.processing/core
+    compile group: 'org.processing', name: 'core', version: '3.3.7'
+
+    // https://mvnrepository.com/artifact/org.processing/video
+    // compile group: 'org.processing', name: 'video', version: '3.2.3'
+
+    //local libs
+//    compile fileTree(dir: 'libs/<your-lib-name>', include: '*.jar')
+}
+
+task runApp (dependsOn: 'classes', type: JavaExec) {
+    println "Starting app ${rootProject.name}"
+    jvmArgs = []
+    main = "App" //"${group}.${rootProject.name}.App"
+    classpath = sourceSets.main.runtimeClasspath
+}
