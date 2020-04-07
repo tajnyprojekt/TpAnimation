@@ -4,7 +4,14 @@ import processing.core.PApplet;
 import java.lang.reflect.Field;
 
 // requires field to be public to animate it
-
+/**
+ * TpAnimatedVariable represents and stores information about a field from the Processing sketch that will be animated.<br>
+ * This class is also responsible for easing and updating the field's value based on parent animation progress.<br>
+ * The field must be marked as <code>public</code> in order to be animated.<br>
+ * This is described along with an example here: {@link TpAnimation#addVariableToAnimation(String, float, float, int, int, boolean)}
+ *
+ * @author Michał Urbański (tajny_projekt)
+ */
 public class TpAnimatedVariable {
 
     private PApplet parent;
@@ -15,25 +22,60 @@ public class TpAnimatedVariable {
     private Class fieldType;
     private boolean ignore;
 
-    public float localProgress;
-    public float startProgress;
-    public float endProgress;
+    private float localProgress;
+    private float startProgress;
+    private float endProgress;
 
-    public float val;
-    public float from;
-    public float to;
+    private float val;
+    private float from;
+    private float to;
 
-    public boolean isFullLength;
-    public int startMillis;
-    public int endMillis;
+    private boolean isFullLength;
+    private int startMillis;
+    private int endMillis;
 
-    public boolean ease;
+    private boolean ease;
 
+    /**
+     * Creates an object representing variable that will be animated.<br>
+     * The field will be identified by it's name.
+     * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
+     * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
+     * This version of constructor let's you create variable's transition taking the full lenght of parent animation.
+     *
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableToAnimation(String, float, float, int, int, boolean)
+     * <code>TpAnimation.addVariableToAnimation</code> for full description with an example.
+     *
+     * @param animation the animation that variable belongs to
+     * @param varName the name of the sketch's field that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param ease flag that indicates whether to use easing
+     */
     public TpAnimatedVariable(TpAnimation animation, String varName, float from, float to, boolean ease) {
         this(animation, varName, from, to, 0, 0, ease);
         isFullLength = true;
     }
 
+    /**
+     * Creates an object representing variable that will be animated.<br>
+     * The field will be identified by it's name.
+     * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
+     * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
+     * This version of constructor let's you create variable's transition that begins or end with some time offset
+     * to the parent animation.
+     *
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableToAnimation(String, float, float, int, int, boolean)
+     * <code>TpAnimation.addVariableToAnimation</code> for full description with an example.
+     *
+     * @param animation the animation that variable belongs to
+     * @param varName the name of the sketch's field that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transitio
+     * @param startMillis start time in animation for value transition
+     * @param endMillis end time in animation for value transition
+     * @param ease flag that indicates whether to use easing
+     */
     public TpAnimatedVariable(TpAnimation animation, String varName, float from, float to,
                               int startMillis, int endMillis, boolean ease) {
         this.animation = animation;
@@ -50,6 +92,11 @@ public class TpAnimatedVariable {
         this.ease = ease;
     }
 
+    /**
+     * Finds field with given name in the sketch and checks it's type
+     *
+     * @param variableName the name of the sketch's field to find
+     */
     @SuppressWarnings("rawtypes")
     private void findFieldInSketch(String variableName) {
         try {
@@ -73,6 +120,9 @@ public class TpAnimatedVariable {
         }
     }
 
+    /**
+     * Updates the sketch's field value
+     */
     private void updateFieldValue() {
         try {
             if (isInt()) {
@@ -91,18 +141,34 @@ public class TpAnimatedVariable {
         }
     }
 
+    /**
+     * Checks type of assigned field.
+     * @return true when assigned field is type <code>int</code>
+     */
     public boolean isInt() {
         return fieldType.toString().equals("int");
     }
 
+    /**
+     * Checks type of assigned field.
+     * @return true when assigned field is type <code>float</code>
+     */
     public boolean isFloat() {
         return fieldType.toString().equals("float");
     }
 
+    /**
+     * Checks type of assigned field.
+     * @return true when assigned field is type <code>double</code>
+     */
     public boolean isDouble() {
         return fieldType.toString().equals("double");
     }
 
+    /**
+     * Updates the field's value based on parent animation progress.
+     * @param progress parent animation progress
+     */
     public void update(float progress) {
         if (ignore) return;
 
@@ -111,6 +177,11 @@ public class TpAnimatedVariable {
         updateFieldValue();
     }
 
+    /**
+     * Updates field's local progress based on parent animation progress and eventual time bounds.<br>
+     * Also applies easing.
+     * @param progress parent animation progress
+     */
     private void updateLocalProgress(float progress) {
         if (isFullLength) {
             localProgress = progress;
@@ -124,96 +195,190 @@ public class TpAnimatedVariable {
         }
     }
 
+    /**
+     * Calculates progress bounds based on transition start and end time offsets and parent animation's duration.
+     */
     public void updateProgressBounds() {
         startProgress = PApplet.map(startMillis, 0, animation.getDurationMillis(), 0, 1);
         endProgress = PApplet.map(endMillis, 0, animation.getDurationMillis(), 0, 1);
     }
 
+    /**
+     * Applies easing at the beginning and end values.
+     * @param t value to be eased, range 0..1
+     * @return eased value, range 0..1
+     */
     public float easeInOut(float t) {
         float sqt = t * t;
         return sqt / (2.0f * (sqt - t) + 1.0f);
     }
 
+    /**
+     *
+     * @return parent animation
+     */
     public TpAnimation getAnimation() {
         return animation;
     }
 
+    /**
+     *
+     * @return assigned field's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return assigned field
+     */
     public Field getField() {
         return field;
     }
 
+    /**
+     *
+     * @return assigned field type
+     */
     public Class getFieldType() {
         return fieldType;
     }
 
+    /**
+     * Tells whether field will be ignored during updates or not.
+     * @return true when assigning the field failed in the constructor
+     */
     public boolean isIgnored() {
         return ignore;
     }
 
+    /**
+     *
+     * @return local progress
+     */
     public float getLocalProgress() {
         return localProgress;
     }
 
+    /**
+     *
+     * @return local progress at which the transition will start
+     */
     public float getStartProgress() {
         return startProgress;
     }
 
+    /**
+     *
+     * @return local progress at which the transition will end
+     */
     public float getEndProgress() {
         return endProgress;
     }
 
+    /**
+     *
+     * @return current field's value
+     */
     public float getVal() {
         return val;
     }
 
+    /**
+     *
+     * @return the initial value for transition
+     */
     public float getFrom() {
         return from;
     }
 
+    /**
+     *
+     * @param from the initial value for transition
+     */
     public void setFrom(float from) {
         this.from = from;
     }
 
+    /**
+     *
+     * @return the final value for transition
+     */
     public float getTo() {
         return to;
     }
 
+    /**
+     *
+     * @param to the final value for transition
+     */
     public void setTo(float to) {
         this.to = to;
     }
 
+    /**
+     *
+     * @return true when transition will last full parent animation's length
+     */
     public boolean isFullLength() {
         return isFullLength;
     }
 
+    /**
+     *
+     * @param fullLength flag indicating if transition will last full parent animation's length
+     */
     public void setFullLength(boolean fullLength) {
         isFullLength = fullLength;
     }
 
+    /**
+     *
+     * @return start time in animation for value transition
+     */
     public int getStartMillis() {
         return startMillis;
     }
 
+    /**
+     * Sets start time in animation for value transition.<br>
+     * After setting this value you must call {@link #updateProgressBounds()}
+     * @param startMillis start time in animation for value transition
+     */
     public void setStartMillis(int startMillis) {
         this.startMillis = startMillis;
     }
 
+    /**
+     *
+     * @return end time in animation for value transition
+     */
     public int getEndMillis() {
         return endMillis;
     }
 
+    /**
+     * Sets end time in animation for value transition.<br>
+     * After setting this value you must call {@link #updateProgressBounds()}
+     * @param endMillis end time in animation for value transition
+     */
     public void setEndMillis(int endMillis) {
         this.endMillis = endMillis;
     }
 
+    /**
+     *
+     * @return true when easing enabled
+     */
     public boolean isEase() {
         return ease;
     }
 
+    /**
+     *
+     * @param ease flag that indicates whether to use easing
+     */
     public void setEase(boolean ease) {
         this.ease = ease;
     }
