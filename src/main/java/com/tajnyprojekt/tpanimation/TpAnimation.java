@@ -11,7 +11,10 @@ import java.util.ArrayList;
  * like in the example below.<br>
  * TpAnimation allows you to configure your value transitions once, during sketch initialization, in a little declarative way,
  * and then does everything for you behind the scenes so you can focus on your awesome visuals and stuff instead
- * coding transitions, timers, interpolations and easing.<br><br>
+ * coding transitions, timers, interpolations and easing.<br>
+ * When your animation looks perfect you can easily render it as frames with <code>render()</code> method, and then assemble
+ * generated frames with ffmpeg, PDE's Movie Maker or other tool you like.<br>
+ * Default render frame rate is 30fps, you can change it with <code>setFrameRate()</code> method<br><br>
  *
  * Example basic usage:<br>
  *     <code>
@@ -20,21 +23,21 @@ import java.util.ArrayList;
  *         // create variables controlling the state of your sketch in the main scope - and mark them as <b>public</b>!<br>
  *         public float a;<br><br>
  *         void setup() {<br>
- *             ... // initialize your sketch<br><br>
- *             // create and initialize the animation
- *             animation = new TpAnimation(this, 1000)<br>
- *                 .setLoopMirror(true)<br>
- *                 .addVariableToAnimation("a", -10.0, 10.0);<br><br>
- *             ...<br>
- *             // start the animation<br>
- *             animation.play();<br>
+ *             &nbsp;&nbsp;&nbsp;&nbsp;... // initialize your sketch<br><br>
+ *             &nbsp;&nbsp;&nbsp;&nbsp;// create and initialize the animation<br>
+ *             &nbsp;&nbsp;&nbsp;&nbsp;animation = new TpAnimation(this, 1000)<br>
+ *             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.setLoopMirror(true)<br>
+ *             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addVariableToAnimation("a", -10.0, 10.0);<br><br>
+ *             &nbsp;&nbsp;&nbsp;&nbsp;...<br>
+ *             &nbsp;&nbsp;&nbsp;&nbsp;// start the animation<br>
+ *             &nbsp;&nbsp;&nbsp;&nbsp;animation.play();<br>
  *         }<br><br>
  *         void draw() {<br>
- *              println(a); // this will print a smooth sequence of numbers going from -10 to 10 and backwards
+ *         &nbsp;&nbsp;&nbsp;&nbsp;println(a); // this will print a smooth sequence of numbers going from -10 to 10 and backwards<br>
  *         }<br>
  *     </code>
  *
- * @author Michał Urbański (tajny_projekt)
+ * @author Michal Urbanski (tajny_projekt)
  */
 public class TpAnimation {
 
@@ -385,22 +388,22 @@ public class TpAnimation {
     /**
      * Adds the sketch's field to the animation. The field will be identified by it's name.<br>
      * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
-     * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
+     * and marked as public in the main scope of your Processing sketch in order to be animated.<br><br>
      * Example:<br>
      * <code>
      *
      *     TpAnimation animation;<br><br>
      *
-     *     // won't work without the public keyword!<br>
-     *     public int myVar1;<br>
-     *     public float myVar2;<br><br>
+     *     // won't work without the <b>public</b> keyword!<br>
+     *     <b>public</b> int myVar1;<br>
+     *     <b>public</b> float myVar2;<br><br>
      *
      *     void setup() {<br>
-     *          ...<br>
-     *          animation = new TpAnimation(this, 1000)<br>
-     *                          .addVariableToAnimation("myVar1", 1, 100)<br>
-     *                          .addVariableToAnimation("myVar2", 0.1, 3.5);<br>
-     *          ...<br>
+     *     &nbsp;&nbsp;&nbsp;&nbsp;...<br>
+     *     &nbsp;&nbsp;&nbsp;&nbsp;animation = new TpAnimation(this, 1000)<br>
+     *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addVariableToAnimation("myVar1", 1, 100)<br>
+     *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addVariableToAnimation("myVar2", 0.1, 3.5);<br>
+     *     &nbsp;&nbsp;&nbsp;&nbsp;...<br>
      *     }<br>
      * </code>
      * <br>
@@ -661,7 +664,7 @@ public class TpAnimation {
      * <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">Java Formatter docs</a>.<br>
      * Extension can be any image extensions supported by Processing, read more in
      * <a href="https://processing.org/reference/save_.html">Processing <code>save()</code> docs</a>.<br>
-     * Don't start the filename pattern with slash <code>'/'</code>!<br>
+     * Don't start the filename pattern with slash <code>'/'</code>!<br><br>
      * Example:<br>
      *     <code>
      *         "frame-%04d.jpg" // tells the formatter to pad the frame number with four leading zeros and jpg extension<br>
@@ -693,6 +696,7 @@ public class TpAnimation {
     /**
      * Sets the name of the output directory for rendering.<br>
      * The name can be provided with, or without a slash at the end.<br>
+     * A directory with provided name will be created in sketch's main directory.<br>
      * Not allowed to call during animation rendering.
      *
      * @param outputDir name of the output directory

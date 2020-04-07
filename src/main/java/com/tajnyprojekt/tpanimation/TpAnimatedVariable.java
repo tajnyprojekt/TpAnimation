@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
  * The field must be marked as <code>public</code> in order to be animated.<br>
  * This is described along with an example here: {@link TpAnimation#addVariableToAnimation(String, float, float, int, int, boolean)}
  *
- * @author Michał Urbański (tajny_projekt)
+ * @author Michal Urbanski (tajny_projekt)
  */
 public class TpAnimatedVariable {
 
