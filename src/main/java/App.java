@@ -1,5 +1,7 @@
 import com.tajnyprojekt.tpanimation.TpAnimation;
+
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 public class App extends PApplet {
 
@@ -19,9 +21,9 @@ public class App extends PApplet {
                 .setLoopMirror(true)
                 .exitOnRenderFinish(false)
                 .addVariableToAnimation("x", 100, 675)
-                .addVariableToAnimation("y", 100, 675, 150, 900)
+                .addVariableToAnimation("y", 100, 675, 150, 900, TpAnimation.BACK_INOUT)
                 ;
-        animation.render();
+        animation.loop();
     }
 
     public void draw() {

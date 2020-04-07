@@ -12,6 +12,8 @@ import java.util.ArrayList;
  * TpAnimation allows you to configure your value transitions once, during sketch initialization, in a little declarative way,
  * and then does everything for you behind the scenes so you can focus on your awesome visuals and stuff instead
  * coding transitions, timers, interpolations and easing.<br>
+ * You can choose from 32 available easing functions (30 of them come from
+ * <a href="https://github.com/jesusgollonet/processing-penner-easing">Robert Penner's easing library</a>.<br>
  * When your animation looks perfect you can easily render it as frames with <code>render()</code> method, and then assemble
  * generated frames with ffmpeg, PDE's Movie Maker or other tool you like.<br>
  * Default render frame rate is 30fps, you can change it with <code>setFrameRate()</code> method<br><br>
@@ -37,9 +39,12 @@ import java.util.ArrayList;
  *         }<br>
  *     </code>
  *
- * @author Michal Urbanski (tajny_projekt)
+ * @see TpEasing available easing functions
+ *
+ * @author Michal Urbanski (tajny_projekt)<br>
+ * created during Corona Time 2020
  */
-public class TpAnimation {
+public class TpAnimation implements TpEasing {
 
     PApplet parent;
 
@@ -341,7 +346,7 @@ public class TpAnimation {
      * Adds the sketch's field to the animation. The field will be identified by it's name.<br>
      * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
      * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
-     * @see #addVariableToAnimation(String, float, float, int, int, boolean) this method for full description with an example.
+     * @see #addVariableToAnimation(String, float, float, int, int, int) this method for full description with an example.
      *
      * @param name the name of the sketch's field that will be animated
      * @param from the initial value for transition
@@ -349,30 +354,30 @@ public class TpAnimation {
      * @return the animation object to chain another method calls
      */
     public TpAnimation addVariableToAnimation(String name, float from, float to) {
-        return addVariableToAnimation(name, from, to, true);
+        return addVariableToAnimation(name, from, to, SIMPLE_INOUT);
     }
 
     /**
      * Adds the sketch's field to the animation. The field will be identified by it's name.<br>
      * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
      * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
-     * @see #addVariableToAnimation(String, float, float, int, int, boolean) this method for full description with an example.
+     * @see #addVariableToAnimation(String, float, float, int, int, int) this method for full description with an example.
      *
      * @param name the name of the sketch's field that will be animated
      * @param from the initial value for transition
      * @param to the final value for transition
-     * @param ease flag that indicates whether to use easing
+     * @param easingFunctionNumber number indicating which easing function to use, all available values are in TpEasing
      * @return the animation object to chain another method calls
      */
-    public TpAnimation addVariableToAnimation(String name, float from, float to, boolean ease) {
-        return addVariableToAnimation(new TpAnimatedVariable(this, name, from, to, ease));
+    public TpAnimation addVariableToAnimation(String name, float from, float to, int easingFunctionNumber) {
+        return addVariableToAnimation(new TpAnimatedVariable(this, name, from, to, easingFunctionNumber));
     }
 
     /**
      * Adds the sketch's field to the animation. The field will be identified by it's name.<br>
      * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
      * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
-     * @see #addVariableToAnimation(String, float, float, int, int, boolean) this method for full description with an example.
+     * @see #addVariableToAnimation(String, float, float, int, int, int) this method for full description with an example.
      *
      * @param name the name of the sketch's field that will be animated
      * @param from the initial value for transition
@@ -382,7 +387,7 @@ public class TpAnimation {
      * @return the animation object to chain another method calls
      */
     public TpAnimation addVariableToAnimation(String name, float from, float to, int startMillis, int endMillis) {
-        return addVariableToAnimation(name, from, to, startMillis, endMillis, true);
+        return addVariableToAnimation(name, from, to, startMillis, endMillis, SIMPLE_INOUT);
     }
 
     /**
@@ -415,18 +420,18 @@ public class TpAnimation {
      * @param to the final value for transition
      * @param startMillis start time in animation for value transition
      * @param endMillis end time in animation for value transition
-     * @param ease flag that indicates whether to use easing
+     * @param easingFunctionNumber number indicating which easing function to use, all available values are in TpEasing
      * @return the animation object to chain another method calls
      */
     public TpAnimation addVariableToAnimation(String name, float from, float to,
-                                              int startMillis, int endMillis, boolean ease) {
+                                              int startMillis, int endMillis, int easingFunctionNumber) {
         return addVariableToAnimation(new TpAnimatedVariable(
-                this, name, from, to, startMillis, endMillis, ease));
+                this, name, from, to, startMillis, endMillis, easingFunctionNumber));
     }
 
     /**
      * Adds object defining the variable to be animated.<br>
-     * Recommended method is to use {@link #addVariableToAnimation(String, float, float, int, int, boolean)}
+     * Recommended method is to use {@link #addVariableToAnimation(String, float, float, int, int, int)}
      * or it's variations.
      *
      * @param variable already configured variable object

@@ -45,7 +45,7 @@ dependencies {
     // compile group: 'org.processing', name: 'video', version: '3.2.3'
 
     //local libs
-//    compile fileTree(dir: 'libs/<your-lib-name>', include: '*.jar')
+    compile fileTree(dir: 'library', include: '*.jar')
 }
 
 task runApp (dependsOn: 'classes', type: JavaExec) {
