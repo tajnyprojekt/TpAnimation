@@ -4,47 +4,80 @@ import processing.core.PApplet;
 import java.util.ArrayList;
 
 /**
- * TpAnimation is the core responsible for playback and managing the animation of Processing sketch's fields.<br>
- * It allows for multiple types of playback like single one, backwards, loop and loop with mirror (back and forth)
- * as well as rendering sketch to frames.<br>
- * The constructor and setters are created in a way similar to builder pattern, that means you can call setters in a chain
- * like in the example below.<br>
- * TpAnimation allows you to configure your value transitions once, during sketch initialization, in a little declarative way,
- * and then does everything for you behind the scenes so you can focus on your awesome visuals and stuff instead
- * coding transitions, timers, interpolations and easing.<br>
+ * TpAnimation is the main class responsible for playback and managing the animation of Processing sketch's fields.<br>
+ * It allows for multiple types of playback like single forward, backwards, loop and loop with mirror (back and forth),
+ * as well as rendering your animation to frames.<br><br>
+
+ * TpAnimation allows you to configure value transitions once, during sketch initialization, in a little declarative way,
+ * and then does all the calculations for you behind the scenes, so you can focus on your awesome visuals and stuff, instead
+ * coding transitions, timers, interpolations and easings.<br>
  * You can choose from 32 available easing functions (30 of them come from
  * <a href="https://github.com/jesusgollonet/processing-penner-easing">Robert Penner's easing library</a>.<br>
- * When your animation looks perfect you can easily render it as frames with <code>render()</code> method, and then assemble
- * generated frames with ffmpeg, PDE's Movie Maker or other tool you like.<br>
+ * See {@link TpEasing} for the list of all available easing functions waiting for you.<br>
+ * The constructor, setters and <code>add..</code> methods are created in a way that enables you to call them in a chain
+ * like in the example below.<br>
+ * Keep in mind that when the animation is playing, looping or rendering the animated variables' values will be set at the beginning of each <code>draw()</code> call.<br>
+ * The animation won't work if you override the values inside your sketch's <code>draw()</code> method.<br><br>
+ * When your animation looks perfect you can easily render it as frames with <code>render()</code> method.<br>
+ * You can find the frames in the <code>animationOutput/</code> directory in your sketch's folder. You have to assemble
+ * generated frames to a video on your own with e.g. ffmpeg, PDE's Movie Maker, After Effects or any other tool you like.<br>
  * Default render frame rate is 30fps, you can change it with <code>setFrameRate()</code> method<br><br>
  *
- * Example basic usage:<br>
- *     <code>
- *         import com.tajnyprojekt.tpanimation.TpAnimation;<br><br>
- *         TpAnimation animation;<br><br>
- *         // create variables controlling the state of your sketch in the main scope - and mark them as <b>public</b>!<br>
- *         public float a;<br><br>
- *         void setup() {<br>
- *             &nbsp;&nbsp;&nbsp;&nbsp;... // initialize your sketch<br><br>
- *             &nbsp;&nbsp;&nbsp;&nbsp;// create and initialize the animation<br>
- *             &nbsp;&nbsp;&nbsp;&nbsp;animation = new TpAnimation(this, 1000)<br>
- *             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.setLoopMirror(true)<br>
- *             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addVariableToAnimation("a", -10.0, 10.0);<br><br>
- *             &nbsp;&nbsp;&nbsp;&nbsp;...<br>
- *             &nbsp;&nbsp;&nbsp;&nbsp;// start the animation<br>
- *             &nbsp;&nbsp;&nbsp;&nbsp;animation.play();<br>
- *         }<br><br>
- *         void draw() {<br>
- *         &nbsp;&nbsp;&nbsp;&nbsp;println(a); // this will print a smooth sequence of numbers going from -10 to 10 and backwards<br>
- *         }<br>
- *     </code>
  *
+ * Example basic usage:<br><br>
+ *<pre><code class=language-processing>
+ *import com.tajnyprojekt.tpanimation.*;
+ *
+ *
+ *TpAnimation animation;
+ *
+ *&sol;/ create variables controlling the state of sketch in the main scope
+ *&sol;/ and mark them as <b>public</b>!
+ *&sol;/ the initial values will be overridden by the animation
+ *public float a = 170;
+ *public float b = 140;
+ *public float x = 170;
+ *
+ *void setup() {
+ *
+ *    size(400, 400);
+ *
+ *    // create and initialize the animation
+ *    animation = new TpAnimation(this, 1000)
+ *        .setLoopMirror(true)
+ *        .addVariableAnimation("a", 0, 280, TpEasing.ELASTIC_OUT)
+ *        .addVariableAnimation("b", 0, 240, TpEasing.BOUNCE_OUT)
+ *        .addVariableAnimation("x", 170, 230, 800, 1400)
+ *        ;
+ *
+ *    // loop and start the animation
+ *    animation.loop();
+ *}
+ *
+ *
+ *void draw() {
+ *
+ *    // use your animated variables to create a simple blinking eye animation
+ *    background(0);
+ *    noStroke();
+ *    fill(69, 247, 148);
+ *    ellipse(200, 200, a, b);
+ *    fill(0);
+ *    ellipse(x, 200, 120, 120);
+ *}
+ *</code></pre><br><br>
+ * Example output:<br><br>
+ * <img src="../../../../assets/images/eye.gif"><br><br>
+ * For more look at the examples included with the library.<br><br>
+ * created by Michal Urbanski (tajny_projekt)<br>
+ * during Corona Time 2020<br><br>
+ * @see #TpAnimation(PApplet, int)
+ * @see #setLoopMirror(boolean)
+ * @see #addVariableAnimation(String, float, float, int, int, int)
  * @see TpEasing available easing functions
  *
- * @author Michal Urbanski (tajny_projekt)<br>
- * created during Corona Time 2020
  */
-public class TpAnimation implements TpEasing {
+public class TpAnimation {
 
     PApplet parent;
 
@@ -116,7 +149,7 @@ public class TpAnimation implements TpEasing {
      * Creates the animation object and initializes the library.
      *
      * @param parent the parent Processing sketch
-     * @param durationMillis duration of the animation in milliseconds
+     * @param durationMillis the duration of the animation in milliseconds
      */
     public TpAnimation(PApplet parent, int durationMillis) {
         this.parent = parent;
@@ -322,7 +355,7 @@ public class TpAnimation implements TpEasing {
         // check if finished
         if (renderedFrames >= numberOfFrames) {
             stop();
-            log("rendering done.");
+            log("rendered " + renderedFrames + " frames\nrendering done.");
             if (exitOnRenderFinish) {
                 parent.exit();
             }
@@ -346,38 +379,43 @@ public class TpAnimation implements TpEasing {
      * Adds the sketch's field to the animation. The field will be identified by it's name.<br>
      * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
      * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
-     * @see #addVariableToAnimation(String, float, float, int, int, int) this method for full description with an example.
+     * @see #addVariableAnimation(String, float, float, int, int, int) this method for full description with an example.
      *
      * @param name the name of the sketch's field that will be animated
      * @param from the initial value for transition
      * @param to the final value for transition
      * @return the animation object to chain another method calls
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
      */
-    public TpAnimation addVariableToAnimation(String name, float from, float to) {
-        return addVariableToAnimation(name, from, to, SIMPLE_INOUT);
+    public TpAnimation addVariableAnimation(String name, float from, float to) {
+        return addVariableAnimation(name, from, to, TpEasing.BASIC_INOUT);
     }
 
     /**
      * Adds the sketch's field to the animation. The field will be identified by it's name.<br>
      * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
      * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
-     * @see #addVariableToAnimation(String, float, float, int, int, int) this method for full description with an example.
+     * @see #addVariableAnimation(String, float, float, int, int, int) this method for full description with an example.
      *
      * @param name the name of the sketch's field that will be animated
      * @param from the initial value for transition
      * @param to the final value for transition
-     * @param easingFunctionNumber number indicating which easing function to use, all available values are in TpEasing
+     * @param easingFunctionNumber number indicating which easing function to use
      * @return the animation object to chain another method calls
+     * @see TpEasing available easing functions.
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
      */
-    public TpAnimation addVariableToAnimation(String name, float from, float to, int easingFunctionNumber) {
-        return addVariableToAnimation(new TpAnimatedVariable(this, name, from, to, easingFunctionNumber));
+    public TpAnimation addVariableAnimation(String name, float from, float to, int easingFunctionNumber) {
+        return addVariableAnimation(new TpAnimatedVariable(this, name, from, to, easingFunctionNumber));
     }
 
     /**
      * Adds the sketch's field to the animation. The field will be identified by it's name.<br>
      * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
      * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
-     * @see #addVariableToAnimation(String, float, float, int, int, int) this method for full description with an example.
+     * @see #addVariableAnimation(String, float, float, int, int, int) this method for full description with an example.
      *
      * @param name the name of the sketch's field that will be animated
      * @param from the initial value for transition
@@ -385,32 +423,35 @@ public class TpAnimation implements TpEasing {
      * @param startMillis start time in animation for value transition
      * @param endMillis end time in animation for value transition
      * @return the animation object to chain another method calls
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
      */
-    public TpAnimation addVariableToAnimation(String name, float from, float to, int startMillis, int endMillis) {
-        return addVariableToAnimation(name, from, to, startMillis, endMillis, SIMPLE_INOUT);
+    public TpAnimation addVariableAnimation(String name, float from, float to, int startMillis, int endMillis) {
+        return addVariableAnimation(name, from, to, startMillis, endMillis, TpEasing.BASIC_INOUT);
     }
 
     /**
      * Adds the sketch's field to the animation. The field will be identified by it's name.<br>
      * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
      * and marked as public in the main scope of your Processing sketch in order to be animated.<br><br>
-     * Example:<br>
-     * <code>
+     * Example:<br><br>
+     *<pre><code class="language-processing">
      *
-     *     TpAnimation animation;<br><br>
+     *TpAnimation animation;<br><br>
      *
-     *     // won't work without the <b>public</b> keyword!<br>
-     *     <b>public</b> int myVar1;<br>
-     *     <b>public</b> float myVar2;<br><br>
+     *&sol;/ won't work without the <b>public</b> modifier!
+     *<b>public</b> int myVar1;
+     *<b>public</b> float myVar2;
      *
-     *     void setup() {<br>
-     *     &nbsp;&nbsp;&nbsp;&nbsp;...<br>
-     *     &nbsp;&nbsp;&nbsp;&nbsp;animation = new TpAnimation(this, 1000)<br>
-     *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addVariableToAnimation("myVar1", 1, 100)<br>
-     *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addVariableToAnimation("myVar2", 0.1, 3.5);<br>
-     *     &nbsp;&nbsp;&nbsp;&nbsp;...<br>
-     *     }<br>
-     * </code>
+     *void setup() {
+     *    ...
+     *    animation = new TpAnimation(this, 1000)
+     *        .addVariableAnimation("myVar1", 1, 100)
+     *        .addVariableAnimation("myVar2", 0.1, 3.5, 200, 800, TpEasing.EXPO_IN)
+     *        ;
+     *    ...
+     *}
+     *</code></pre>
      * <br>
      * Use <code>startMillis</code> and <code>endMillis</code> when want to animate the variable's value not throughout
      * the whole animation time but for a certain period.
@@ -420,24 +461,28 @@ public class TpAnimation implements TpEasing {
      * @param to the final value for transition
      * @param startMillis start time in animation for value transition
      * @param endMillis end time in animation for value transition
-     * @param easingFunctionNumber number indicating which easing function to use, all available values are in TpEasing
+     * @param easingFunctionNumber number indicating which easing function to use
      * @return the animation object to chain another method calls
+     * @see TpEasing available easing functions.
+     * @see TpAnimatedVariable
      */
-    public TpAnimation addVariableToAnimation(String name, float from, float to,
-                                              int startMillis, int endMillis, int easingFunctionNumber) {
-        return addVariableToAnimation(new TpAnimatedVariable(
+    public TpAnimation addVariableAnimation(String name, float from, float to,
+                                            int startMillis, int endMillis, int easingFunctionNumber) {
+        return addVariableAnimation(new TpAnimatedVariable(
                 this, name, from, to, startMillis, endMillis, easingFunctionNumber));
     }
 
     /**
      * Adds object defining the variable to be animated.<br>
-     * Recommended method is to use {@link #addVariableToAnimation(String, float, float, int, int, int)}
+     * Recommended method is to use {@link #addVariableAnimation(String, float, float, int, int, int)}
      * or it's variations.
      *
-     * @param variable already configured variable object
+     * @param variable the already configured variable object
      * @return the animation object to chain another method calls
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
      */
-    public TpAnimation addVariableToAnimation(TpAnimatedVariable variable) {
+    public TpAnimation addVariableAnimation(TpAnimatedVariable variable) {
         variables.add(variable);
         return this;
     }

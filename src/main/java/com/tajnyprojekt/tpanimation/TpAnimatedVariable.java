@@ -6,12 +6,13 @@ import java.lang.reflect.Field;
 // requires field to be public to animate it
 /**
  * TpAnimatedVariable represents and stores information about a field from the Processing sketch that will be animated.<br>
+ * Your variable can be of type <code>int</code> <code>float</code> <code>float</code>
  * This class is also responsible for easing and updating the field's value based on parent animation progress.<br>
  * The field must be marked as <code>public</code> in order to be animated.<br>
- * This is described along with an example here: {@link TpAnimation#addVariableToAnimation(String, float, float, int, int, int)}
+ * This is described along with an example here: {@link TpAnimation#addVariableAnimation(String, float, float, int, int, int)}<br>
  *
- * @author Michal Urbanski (tajny_projekt)<br>
- * created during Corona Time 2020
+ * @see TpAnimation
+ * @see TpAnimation#addVariableAnimation(String, float, float, int, int, int)
  */
 public class TpAnimatedVariable {
 
@@ -45,14 +46,14 @@ public class TpAnimatedVariable {
      * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
      * This version of constructor let's you create variable's transition taking the full lenght of parent animation.
      *
-     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableToAnimation(String, float, float, int, int, int)
-     * <code>TpAnimation.addVariableToAnimation</code> for full description with an example.
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableAnimation(String, float, float, int, int, int)
+     * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
      *
      * @param animation the animation that variable belongs to
      * @param varName the name of the sketch's field that will be animated
      * @param from the initial value for transition
      * @param to the final value for transition
-     * @param easing number indicating which easing function to use, all available values are in TpEasing
+     * @param easing number indicating which easing function to use
      * @see TpEasing available easing functions
      */
     public TpAnimatedVariable(TpAnimation animation, String varName, float from, float to, int easing) {
@@ -68,16 +69,16 @@ public class TpAnimatedVariable {
      * This version of constructor let's you create variable's transition that begins or end with some time offset
      * to the parent animation.
      *
-     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableToAnimation(String, float, float, int, int, int)
-     * <code>TpAnimation.addVariableToAnimation</code> for full description with an example.
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableAnimation(String, float, float, int, int, int)
+     * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
      *
      * @param animation the animation that variable belongs to
      * @param varName the name of the sketch's field that will be animated
      * @param from the initial value for transition
      * @param to the final value for transitio
-     * @param startMillis start time in animation for value transition
-     * @param endMillis end time in animation for value transition
-     * @param easing number indicating which easing function to use, all available values are in TpEasing
+     * @param startMillis the start time in animation for value transition
+     * @param endMillis the end time in animation for value transition
+     * @param easing the number indicating which easing function to use
      * @see TpEasing available easing functions.
      */
     public TpAnimatedVariable(TpAnimation animation, String varName, float from, float to,
@@ -185,7 +186,7 @@ public class TpAnimatedVariable {
     /**
      * Updates field's local progress based on parent animation progress and eventual time bounds.<br>
      * Also applies easing.
-     * @param progress parent animation progress
+     * @param progress the parent animation progress
      */
     private void updateLocalProgress(float progress) {
         if (isFullLength) {
@@ -196,7 +197,7 @@ public class TpAnimatedVariable {
             localProgress = PApplet.map(localProgress, startProgress, endProgress, 0.0f, 1.0f);
         }
         if (ease) {
-            localProgress = TpEasingWrapper.ease(easingFunctionNumber, localProgress);
+            localProgress = TpEasing.ease(localProgress, easingFunctionNumber);
         }
     }
 
@@ -372,7 +373,7 @@ public class TpAnimatedVariable {
 
     /**
      *
-     * @param easingFunctionNumber number indicating which easing function to use, all available values are in TpEasing
+     * @param easingFunctionNumber number indicating which easing function to use
      * @see TpEasing available easing functions.
      */
     public void setEasing(int easingFunctionNumber) {
