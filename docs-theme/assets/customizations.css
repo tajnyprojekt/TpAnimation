@@ -1,0 +1,236 @@
+/**
+ * font import to index.html
+ *<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Mono&display=swap" rel="stylesheet"> 
+ */
+
+
+#search_filtered .jd-selected {
+  background-color: #45F794;
+}
+
+body {
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1.5;
+    color: #151001;
+}
+
+#header {
+  height: 80px;
+  border-bottom: none;
+  box-shadow: 0 6px 5px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+#headerLeft, #headerRight {
+  padding: 10px 0;
+}
+
+#tp-custom-header-content a {
+  color: black;
+  line-height: 50px;
+  margin-left: 60px;
+  display: block;
+}
+
+#tp-custom-header-content span {
+  font-size: 1.5em;
+  vertical-align: middle;
+}
+
+#tp-logo {
+  height: 40px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 20px;
+
+}
+
+#tp-custom-header-content-right {
+  margin-right: 60px;
+  color: #999C9E;
+}
+
+table.gsc-search-box {
+  display: none;
+  margin-bottom: 10px !important;
+  border: none !important;
+}
+
+input.gsc-input {
+  border: 3px solid #C2C1BE;
+  height: 30px;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: calc(100% - 30px);
+}
+
+#search-button {
+  height: 36px;
+  border: none;
+  background-color: #C2C1BE;
+  color: #fff;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-weight: 700px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: color 0.4s;
+}
+
+#search-button:hover {
+  transition: color 0.4s;
+  color: #151001;
+}
+
+
+#jd-content {
+  padding: 18px 20%;
+}
+
+#jd-header {
+  background-color: #fff;
+  border-bottom: 5px dashed #151001;
+  font-size: 1.2em;
+}
+
+#api-info-block {
+  color: #151001;
+}
+
+#jd-header h1 {
+  font-size: 3.45em;
+  margin: 1em auto 1em auto;
+  text-align: center;
+}
+
+#jd-content h2 {
+  font-size: 2.45em;
+  color: #151001;
+  border-top: 30px solid #45F794;
+  padding: 3em 0 0;
+  margin: 3em auto 3em auto;
+  text-align: center;
+}
+
+.jd-details {
+  margin-top: 30px;
+  margin-bottom: 120px;
+}
+
+h4.jd-details-title {
+  margin: 1em -60px 1.5em -60px !important;
+  color: #F7F6F2 !important;
+  background: #21201F;
+  /* display: inline-block; */
+  padding: 30px 60px;
+}
+
+p {
+  font-family: 'Roboto Mono', monospace;
+  color: #21201F;
+}
+
+code, pre {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    color: #999C9E;
+    font-weight: 500;
+}
+
+a, a code{
+  color: #F85545;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+
+a:hover, a:active {
+  text-decoration: underline;
+}
+
+a:visited, a:visited {
+  color: #EB5042;
+}
+
+.jd-details-title a {
+  color: #45F794;
+}
+
+.jd-details-title a:visited {
+  color: #52DE91;
+}
+
+table {
+  /* margin: 60px !important; */
+  margin-top: 30px !important;
+  margin-bottom: 60px !important;
+  border: 3px solid #EBE9E6;
+}
+
+.jd-tagtable th, .jd-tagtable td {
+  padding: 10px 12px;
+}
+
+th {
+  background-color: #EBE9E6;
+  padding: 20px;
+}
+
+td {
+  padding: 20px 12px;
+}
+
+.jd-inheritance-table, .jd-sumtable {
+  border: none;
+}
+
+#footer {
+  /* display: none; */
+}
+
+#footer:after {
+  content: 'Styled with ♥ | tajnyprojekt';
+  display: block;
+
+}
+
+/* panel */
+
+.ui-resizable-e {
+  background: none;
+  border-right: 5px dashed #151001;
+}
+
+.ui-resizable-s {
+  background: none;
+  border-top: 5px dashed #151001;
+}
+
+#side-nav li {
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+#side-nav li h2 {
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+#side-nav .selected {
+  padding: 10px 0px;
+  background-color: #fff;
+}
+
+#side-nav .selected a {
+  background-color: #151001;
+  color: #fff;
+  font-style: italic;
+  padding: 5px 18px 5px 18px;
+  /* padding: 10px 0px; */
+}
+
+#side-nav li a {
+  color: #151001;
+}
+
+#tree-link {
+  color: #151001;
+}

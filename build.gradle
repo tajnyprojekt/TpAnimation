@@ -9,8 +9,16 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    doclava
+}
+
 dependencies {
 
+    // for docs
+    doclava 'com.google.doclava:doclava:1.0.6'
+
+    // processing core
     compile "org.jogamp.gluegen:gluegen-rt:2.3.2"
     compile "org.jogamp.jogl:jogl-all:2.3.2"
 
@@ -48,9 +56,39 @@ dependencies {
     compile fileTree(dir: 'library', include: '*.jar')
 }
 
+// running PApplet from example
+
 task runApp (dependsOn: 'classes', type: JavaExec) {
     println "Starting app ${rootProject.name}"
     jvmArgs = []
-    main = "App" //"${group}.${rootProject.name}.App"
+    main = "example.App" //"${group}.${rootProject.name}.App"
     classpath = sourceSets.main.runtimeClasspath
 }
+
+// documentation related tasks
+
+task cleanDocs(type: Delete) {
+    delete 'reference/'
+}
+
+task copyDocsTheme(type: Copy) {
+    from "docs-theme"
+    into "reference"
+}
+
+task javadocDoclava(type: Javadoc,
+                    dependsOn: project.configurations.doclava) {
+    failOnError = true
+    source = sourceSets.main.java.srcDirs
+    exclude "example"
+    classpath = sourceSets.main.runtimeClasspath
+    destinationDir = file("reference/")
+    title = null
+    options.doclet = "com.google.doclava.Doclava"
+    options.docletpath = configurations.doclava.files.asType(List)
+    
+
+}
+
+javadocDoclava.dependsOn cleanDocs
+javadocDoclava.finalizedBy copyDocsTheme
