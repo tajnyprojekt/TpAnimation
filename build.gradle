@@ -15,10 +15,9 @@ configurations {
 
 dependencies {
 
-    // for docs
     doclava 'com.google.doclava:doclava:1.0.6'
 
-    // processing core
+    // ogl
     compile "org.jogamp.gluegen:gluegen-rt:2.3.2"
     compile "org.jogamp.jogl:jogl-all:2.3.2"
 
@@ -46,48 +45,40 @@ dependencies {
     runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-windows-amd64"
     runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-windows-i586"
 
-    // https://mvnrepository.com/artifact/org.processing/core
     compile group: 'org.processing', name: 'core', version: '3.3.7'
 
-    // https://mvnrepository.com/artifact/org.processing/video
-    // compile group: 'org.processing', name: 'video', version: '3.2.3'
-
-    //local libs
-    compile fileTree(dir: 'library', include: '*.jar')
+    // Robert Penner's easing library, see reference for github url
+    compile fileTree(dir: 'TpAnimation/library', include: 'easing.jar')
 }
 
-// running PApplet from example
-
+// run PApplet from example
 task runApp (dependsOn: 'classes', type: JavaExec) {
     println "Starting app ${rootProject.name}"
     jvmArgs = []
-    main = "example.App" //"${group}.${rootProject.name}.App"
+    main = "example.App"
     classpath = sourceSets.main.runtimeClasspath
 }
 
 // documentation related tasks
 
 task cleanDocs(type: Delete) {
-    delete 'reference/'
+    delete 'TpAnimation/reference/'
 }
 
 task copyDocsTheme(type: Copy) {
     from "docs-theme"
-    into "reference"
+    into "TpAnimation/reference"
 }
 
-task javadocDoclava(type: Javadoc,
-                    dependsOn: project.configurations.doclava) {
+task javadocDoclava(type: Javadoc, dependsOn: project.configurations.doclava) {
     failOnError = true
     source = sourceSets.main.java.srcDirs
     exclude "example"
     classpath = sourceSets.main.runtimeClasspath
-    destinationDir = file("reference/")
+    destinationDir = file("TpAnimation/reference/")
     title = null
     options.doclet = "com.google.doclava.Doclava"
     options.docletpath = configurations.doclava.files.asType(List)
-    
-
 }
 
 javadocDoclava.dependsOn cleanDocs

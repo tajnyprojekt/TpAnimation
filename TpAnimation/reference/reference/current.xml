@@ -49,6 +49,50 @@
 <parameter name="easing" type="int">
 </parameter>
 </constructor>
+<constructor name="TpAnimatedVariable"
+ type="com.tajnyprojekt.tpanimation.TpAnimatedVariable"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="animation" type="com.tajnyprojekt.tpanimation.TpAnimation">
+</parameter>
+<parameter name="array" type="java.lang.Object">
+</parameter>
+<parameter name="index" type="int">
+</parameter>
+<parameter name="from" type="float">
+</parameter>
+<parameter name="to" type="float">
+</parameter>
+<parameter name="easing" type="int">
+</parameter>
+</constructor>
+<constructor name="TpAnimatedVariable"
+ type="com.tajnyprojekt.tpanimation.TpAnimatedVariable"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="animation" type="com.tajnyprojekt.tpanimation.TpAnimation">
+</parameter>
+<parameter name="array" type="java.lang.Object">
+</parameter>
+<parameter name="index" type="int">
+</parameter>
+<parameter name="from" type="float">
+</parameter>
+<parameter name="to" type="float">
+</parameter>
+<parameter name="startMillis" type="int">
+</parameter>
+<parameter name="endMillis" type="int">
+</parameter>
+<parameter name="easing" type="int">
+</parameter>
+</constructor>
 <method name="getAnimation"
  return="com.tajnyprojekt.tpanimation.TpAnimation"
  abstract="false"
@@ -106,6 +150,17 @@
 </method>
 <method name="getFrom"
  return="float"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getIndex"
+ return="int"
  abstract="false"
  native="false"
  synchronized="false"
@@ -192,6 +247,17 @@
  visibility="public"
 >
 </method>
+<method name="isDoubleArray"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="isEase"
  return="boolean"
  abstract="false"
@@ -204,6 +270,17 @@
 >
 </method>
 <method name="isFloat"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isFloatArray"
  return="boolean"
  abstract="false"
  native="false"
@@ -237,6 +314,17 @@
 >
 </method>
 <method name="isInt"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isIntArray"
  return="boolean"
  abstract="false"
  native="false"
@@ -370,6 +458,94 @@
 <parameter name="durationMillis" type="int">
 </parameter>
 </constructor>
+<method name="addArrayItemAnimation"
+ return="com.tajnyprojekt.tpanimation.TpAnimation"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="array" type="java.lang.Object">
+</parameter>
+<parameter name="index" type="int">
+</parameter>
+<parameter name="from" type="float">
+</parameter>
+<parameter name="to" type="float">
+</parameter>
+</method>
+<method name="addArrayItemAnimation"
+ return="com.tajnyprojekt.tpanimation.TpAnimation"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="array" type="java.lang.Object">
+</parameter>
+<parameter name="index" type="int">
+</parameter>
+<parameter name="from" type="float">
+</parameter>
+<parameter name="to" type="float">
+</parameter>
+<parameter name="easingFunctionNumber" type="int">
+</parameter>
+</method>
+<method name="addArrayItemAnimation"
+ return="com.tajnyprojekt.tpanimation.TpAnimation"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="array" type="java.lang.Object">
+</parameter>
+<parameter name="index" type="int">
+</parameter>
+<parameter name="from" type="float">
+</parameter>
+<parameter name="to" type="float">
+</parameter>
+<parameter name="startMillis" type="int">
+</parameter>
+<parameter name="endMillis" type="int">
+</parameter>
+</method>
+<method name="addArrayItemAnimation"
+ return="com.tajnyprojekt.tpanimation.TpAnimation"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="array" type="java.lang.Object">
+</parameter>
+<parameter name="index" type="int">
+</parameter>
+<parameter name="from" type="float">
+</parameter>
+<parameter name="to" type="float">
+</parameter>
+<parameter name="startMillis" type="int">
+</parameter>
+<parameter name="endMillis" type="int">
+</parameter>
+<parameter name="easingFunctionNumber" type="int">
+</parameter>
+</method>
 <method name="addVariableAnimation"
  return="com.tajnyprojekt.tpanimation.TpAnimation"
  abstract="false"
@@ -462,6 +638,17 @@
 >
 <parameter name="variable" type="com.tajnyprojekt.tpanimation.TpAnimatedVariable">
 </parameter>
+</method>
+<method name="draw"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 </method>
 <method name="exitOnRenderFinish"
  return="com.tajnyprojekt.tpanimation.TpAnimation"
@@ -685,6 +872,19 @@
  visibility="public"
 >
 </method>
+<method name="loop"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="n" type="int">
+</parameter>
+</method>
 <method name="pause"
  return="void"
  abstract="false"
@@ -707,6 +907,17 @@
  visibility="public"
 >
 </method>
+<method name="pre"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="render"
  return="void"
  abstract="false"
@@ -717,6 +928,19 @@
  deprecated="not deprecated"
  visibility="public"
 >
+</method>
+<method name="render"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="n" type="int">
+</parameter>
 </method>
 <method name="setDurationMillis"
  return="com.tajnyprojekt.tpanimation.TpAnimation"
@@ -842,14 +1066,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="TpEasing"
- type="com.tajnyprojekt.tpanimation.TpEasing"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="ease"
  return="float"
  abstract="false"

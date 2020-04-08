@@ -3,25 +3,35 @@ package com.tajnyprojekt.tpanimation;
 import processing.core.PApplet;
 import java.lang.reflect.Field;
 
-// requires field to be public to animate it
+
 /**
- * TpAnimatedVariable represents and stores information about a field from the Processing sketch that will be animated.<br>
- * Your variable can be of type <code>int</code> <code>float</code> <code>float</code>
+ * TpAnimatedVariable represents and stores information about a field or an array item from the Processing sketch that will be animated.<br>
+ * Your variable can be of type <code>int</code>, <code>float</code> or <code>double</code>, and for arrays <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
  * This class is also responsible for easing and updating the field's value based on parent animation progress.<br>
  * The field must be marked as <code>public</code> in order to be animated.<br>
  * This is described along with an example here: {@link TpAnimation#addVariableAnimation(String, float, float, int, int, int)}<br>
  *
  * @see TpAnimation
  * @see TpAnimation#addVariableAnimation(String, float, float, int, int, int)
+ * @see TpAnimation#addArrayItemAnimation(Object, int, float, float, int, int, int)
+ * @see TpEasing
  */
 public class TpAnimatedVariable {
 
     private PApplet parent;
     private TpAnimation animation;
 
+    private boolean isField;
+
     private String name;
     private Field field;
     private Class fieldType;
+
+    private Object var;
+
+    private Object array;
+    private int index;
+
     private boolean ignore;
 
     private float localProgress;
@@ -83,11 +93,70 @@ public class TpAnimatedVariable {
      */
     public TpAnimatedVariable(TpAnimation animation, String varName, float from, float to,
                               int startMillis, int endMillis, int easing) {
+        init(animation, from, to, 0, 0, easing);
+        isField = true;
+        findFieldInSketch(varName);
+    }
+
+    /**
+     * Creates an object representing the variable that will be animated.<br>
+     * The variable will be identified by array reference and the item index.<br>
+     * The type of the passed field must be <code>int</code>, <code>float</code> or <code>double</code>
+     * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
+     * This version of constructor let's you create variable's transition taking the full lenght of parent animation.
+     *
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableAnimation(String, float, float, int, int, int)
+     * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
+     *
+     * @param animation the animation that variable belongs to
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param easing number indicating which easing function to use
+     * @see TpEasing available easing functions
+     */
+    public TpAnimatedVariable(TpAnimation animation, Object array, int index, float from, float to, int easing) {
+        this(animation, array, index, from, to, 0, 0, easing);
+        isFullLength = true;
+    }
+
+    /**
+     * Creates an object representing variable that will be animated.<br>
+     * The variable will be identified by array reference and the item index.<br>
+     * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
+     * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
+     * This version of constructor let's you create variable's transition that begins or end with some time offset
+     * to the parent animation.
+     *
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableAnimation(String, float, float, int, int, int)
+     * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
+     *
+     * @param animation the animation that variable belongs to
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transitio
+     * @param startMillis the start time in animation for value transition
+     * @param endMillis the end time in animation for value transition
+     * @param easing the number indicating which easing function to use
+     * @see TpEasing available easing functions.
+     */
+    public TpAnimatedVariable(TpAnimation animation, Object array, int index, float from, float to,
+                              int startMillis, int endMillis, int easing) {
+        init(animation, from, to, startMillis, endMillis, easing);
+        isField = false;
+        this.array = array;
+        this.index = index;
+        checkArray();
+
+    }
+
+    private void init(TpAnimation animation, float from, float to,
+                      int startMillis, int endMillis, int easing) {
         this.animation = animation;
         this.parent = animation.parent;
-        this.name = varName;
         ignore = false;
-        findFieldInSketch(varName);
         this.from = from;
         this.to = to;
         isFullLength = false;
@@ -106,8 +175,8 @@ public class TpAnimatedVariable {
     @SuppressWarnings("rawtypes")
     private void findFieldInSketch(String variableName) {
         try {
-            field = parent.getClass().getField(variableName);
-            fieldType = field.getType();
+//            field = parent.getClass().getField(variableName);
+            fieldType = var.getClass();
             if (!(isInt() || isFloat() || isDouble())) {
                 ignore = true;
                 TpAnimation.log("Wrong type: " + fieldType.toString()
@@ -127,18 +196,51 @@ public class TpAnimatedVariable {
     }
 
     /**
+     * Checks type of array
+     */
+    @SuppressWarnings("rawtypes")
+    private void checkArray() {
+        try {
+            fieldType = array.getClass();
+            if (!(isIntArray() || isFloatArray() || isDoubleArray())) {
+                ignore = true;
+                TpAnimation.log("Wrong type of array: " + fieldType.toString()
+                        + ". \nArray containing item to be animated must be of type int[], float[] or double[].", true);
+            }
+        }
+        catch (Exception e) {
+            ignore = true;
+            TpAnimation.log("An error occured during looking for array"
+                    + ". \nMake sure that the array is marked as 'public', "
+                    + "and located in the main scope of the sketch (above setup()), \ne.g. public float[] "
+                    + "someArray;", true);
+            e.printStackTrace();
+            parent.exit();
+        }
+    }
+
+    /**
      * Updates the sketch's field value
      */
     private void updateFieldValue() {
         try {
-            if (isInt()) {
-                field.setInt(parent, PApplet.round(val));
+            if (isField) {
+                if (isInt()) {
+                    field.setInt(parent, PApplet.round(val));
+                } else if (isFloat()) {
+                    field.setFloat(parent, val);
+                } else if (isDouble()) {
+                    field.setDouble(parent, val);
+                }
             }
-            else if (isFloat()) {
-                field.setFloat(parent, val);
-            }
-            else if (isDouble()) {
-                field.setDouble(parent, val);
+            else {
+                if (isIntArray()) {
+                    ((int[]) array)[index] = PApplet.round(val);
+                } else if (isFloatArray()) {
+                    ((float[]) array)[index] = val;
+                } else if (isDoubleArray()) {
+                    ((double[]) array)[index] = val;
+                }
             }
         }
         catch (Exception e) {
@@ -152,7 +254,7 @@ public class TpAnimatedVariable {
      * @return true when assigned field is type <code>int</code>
      */
     public boolean isInt() {
-        return fieldType.toString().equals("int");
+        return fieldType.equals(int.class);
     }
 
     /**
@@ -160,7 +262,7 @@ public class TpAnimatedVariable {
      * @return true when assigned field is type <code>float</code>
      */
     public boolean isFloat() {
-        return fieldType.toString().equals("float");
+        return fieldType.equals(float.class);
     }
 
     /**
@@ -168,7 +270,31 @@ public class TpAnimatedVariable {
      * @return true when assigned field is type <code>double</code>
      */
     public boolean isDouble() {
-        return fieldType.toString().equals("double");
+        return fieldType.equals(double.class);
+    }
+
+    /**
+     * Checks type of assigned array.
+     * @return true when assigned field is type <code>int[]</code>
+     */
+    public boolean isIntArray() {
+        return fieldType.equals(int[].class);
+    }
+
+    /**
+     * Checks type of assigned array.
+     * @return true when assigned field is type <code>float[]</code>
+     */
+    public boolean isFloatArray() {
+        return fieldType.equals(float[].class);
+    }
+
+    /**
+     * Checks type of assigned array.
+     * @return true when assigned field is type <code>double[]</code>
+     */
+    public boolean isDoubleArray() {
+        return fieldType.equals(double[].class);
     }
 
     /**
@@ -240,6 +366,15 @@ public class TpAnimatedVariable {
     public Class getFieldType() {
         return fieldType;
     }
+
+    /**
+     *
+     * @return the animated item index in array
+     */
+    public int getIndex() {
+        return index;
+    }
+
 
     /**
      * Tells whether field will be ignored during updates or not.

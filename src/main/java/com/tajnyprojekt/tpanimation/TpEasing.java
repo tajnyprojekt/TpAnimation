@@ -3,11 +3,11 @@ package com.tajnyprojekt.tpanimation;
 import penner.easing.*;
 
 /**
- * Easing functions for use with {@link TpAnimation}<br>
+ * Easing functions for use with {@link TpAnimation}.<br>
  * Wrapper around
- * <a href="https://github.com/jesusgollonet/processing-penner-easing">Robert Penner's easing library</a>,<br>
- * exposing all available easing functions through a single static method.<br><br>
- * Example usage:<br><br>
+ * <a href="https://github.com/jesusgollonet/processing-penner-easing">Robert Penner's easing library</a>,
+ * exposing all available easing functions through a single static method. Also holds the available easings as constants.<br><br>
+ * Example standalone usage:<br><br>
  *
  * <pre><code class="language-processing">
  * // let's assume we have a variable <i>t</i> going from 0 to 1 in some time
@@ -55,6 +55,9 @@ public class TpEasing {
     public static final int ELASTIC_OUT    = 30;
     public static final int ELASTIC_INOUT  = 31;
 
+
+    // to prevent instantiation
+    private TpEasing() {}
 
     /**
      * Applies easing with the selected function.<br>
@@ -116,36 +119,3 @@ public class TpEasing {
         return sqt / (2.0f * (sqt - t) + 1.0f);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
