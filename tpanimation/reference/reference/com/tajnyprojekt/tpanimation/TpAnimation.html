@@ -345,7 +345,7 @@ void setup() {
     size(400, 400);
 
     // create and initialize the animation
-    animation = new TpAnimation(this, 1000)
+    animation = new TpAnimation(this, 2000)
         // set the animation to play back and forth during looping
         .setLoopMirror(true)
         // add variable <i>x</i> and animate it from 170 to 230,
@@ -369,7 +369,7 @@ void draw() {
     background(0);
     noStroke();
     fill(69, 247, 148);
-    ellipse(200, 200, a, b);
+    ellipse(200, 200, r[0], r[1]);
     fill(0);
     ellipse(x, 200, 120, 120);
 }
@@ -388,7 +388,7 @@ public void onAnimationFinished(TpAnimation a) {
  For more look at the examples included with the library.<br><br>
  __<br>
  <i>created by Michal Urbanski (<a href="https://tajnyprojekt.com">tajny_projekt</a>),<br>
- during Corona Time 2020</i><br><br></p>
+ during the Corona Time 2020</i><br><br></p>
 
 
 

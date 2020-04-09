@@ -6,6 +6,9 @@ function createHeaderLogo() {
     var img = document.createElement('img');
     img.id = 'tp-logo';
     img.src = '../../../../assets/images/TP_logo_black.svg';
+    if (window.location.pathname.endsWith('packages.html')) {
+        img.src = '../assets/images/TP_logo_black.svg';
+    }
     var a = document.createElement('a');
     a.href = 'https://tajnyprojekt.com';
     var span = document.createElement('span');

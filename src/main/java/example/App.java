@@ -32,7 +32,7 @@ public class App extends PApplet {
                 .addArrayItemAnimation(params, 0, 0, 280, 0, 2000, TpEasing.ELASTIC_OUT)
                 .addArrayItemAnimation(params, 1, 0, 240, 0, 2000, TpEasing.BOUNCE_OUT)
                 .addArrayItemAnimation(params, 2, 170, 230, 800, 1400, TpEasing.BACK_IN)
-//                .addVariableAnimation(a, 0, 280, TpEasing.QUINT_IN)
+                .addVariableAnimation("a", 0, 280, TpEasing.QUINT_IN)
 //                .addVariableAnimation("b", 0, 240, TpEasing.BOUNCE_OUT)
 //                .addVariableAnimation("x", 170, 230, 800, 1400, TpEasing.BACK_IN)
                 ;
@@ -43,7 +43,7 @@ public class App extends PApplet {
         background(0);
         noStroke();
         fill(69, 247, 148);
-        ellipse(200, 200, params[0], params[1]);
+        ellipse(200, 200, a, a);
         fill(0);
         ellipse(params[2], 200, 120, 120);
     }
@@ -56,6 +56,10 @@ public class App extends PApplet {
 
     public void onAnimationFinished(TpAnimation a) {
         println(String.format("The animation has finished after %d loops.", a.getLoopCount()));
+    }
+
+    public void onLoopEnd(TpAnimation a) {
+        println("loop end.");
     }
 
     public static void main(String[] args) {

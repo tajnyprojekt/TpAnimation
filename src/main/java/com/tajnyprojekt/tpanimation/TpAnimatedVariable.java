@@ -93,7 +93,7 @@ public class TpAnimatedVariable {
      */
     public TpAnimatedVariable(TpAnimation animation, String varName, float from, float to,
                               int startMillis, int endMillis, int easing) {
-        init(animation, from, to, 0, 0, easing);
+        init(animation, from, to, startMillis, endMillis, easing);
         isField = true;
         findFieldInSketch(varName);
     }
@@ -175,8 +175,8 @@ public class TpAnimatedVariable {
     @SuppressWarnings("rawtypes")
     private void findFieldInSketch(String variableName) {
         try {
-//            field = parent.getClass().getField(variableName);
-            fieldType = var.getClass();
+            field = parent.getClass().getField(variableName);
+            fieldType = field.getType();
             if (!(isInt() || isFloat() || isDouble())) {
                 ignore = true;
                 TpAnimation.log("Wrong type: " + fieldType.toString()
@@ -193,6 +193,20 @@ public class TpAnimatedVariable {
             e.printStackTrace();
             parent.exit();
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static Object getValueOf(Object clazz, String lookingForValue)
+            throws Exception {
+        Field field = clazz.getClass().getField(lookingForValue);
+        Class clazzType = field.getType();
+        if (clazzType.toString().equals("double"))
+            return field.getDouble(clazz);
+        else if (clazzType.toString().equals("int"))
+            return field.getInt(clazz);
+        // else other type ...
+        // and finally
+        return field.get(clazz);
     }
 
     /**

@@ -50,7 +50,7 @@ import java.util.ArrayList;
  *    size(400, 400);
  *
  *    // create and initialize the animation
- *    animation = new TpAnimation(this, 1000)
+ *    animation = new TpAnimation(this, 2000)
  *        // set the animation to play back and forth during looping
  *        .setLoopMirror(true)
  *        // add variable <i>x</i> and animate it from 170 to 230,
@@ -74,7 +74,7 @@ import java.util.ArrayList;
  *    background(0);
  *    noStroke();
  *    fill(69, 247, 148);
- *    ellipse(200, 200, a, b);
+ *    ellipse(200, 200, r[0], r[1]);
  *    fill(0);
  *    ellipse(x, 200, 120, 120);
  *}
@@ -93,7 +93,7 @@ import java.util.ArrayList;
  * For more look at the examples included with the library.<br><br>
  * __<br>
  * <i>created by Michal Urbanski (<a href="https://tajnyprojekt.com">tajny_projekt</a>),<br>
- * during Corona Time 2020</i><br><br>
+ * during the Corona Time 2020</i><br><br>
  * @see #TpAnimation(PApplet, int)
  * @see #setLoopMirror(boolean)
  * @see #addVariableAnimation(String, float, float, int, int, int)
@@ -130,18 +130,20 @@ public class TpAnimation {
 
     private boolean isFinished;
     private boolean exitOnRenderFinish;
-    private Method finishedEvent;
 
-    private int outputFrameRate;
 
     /**
      * A String pattern used to generate rendered frame's filename with <code>String.format()</code>.
      * Must contain an integer flag <code>%d</code> or it's variation and an extension.
      * Extension can be any image extension supported by Processing.
      */
+    private int outputFrameRate;
     private String outputFilenamePattern;
     private String outputDir;
     private int outputIndexOffset;
+
+    private Method loopEndEvent;
+    private Method finishedEvent;
 
     /**
      * Name of the library used in logging.
@@ -188,6 +190,8 @@ public class TpAnimation {
         parent.registerMethod("pre", this);
         parent.registerMethod("draw", this);
         findFinishedEventCallback();
+        findLoopEndEventCallback();
+        log("Let's animate!");
     }
 
     /**
@@ -227,9 +231,22 @@ public class TpAnimation {
             finishedEvent =
                     parent.getClass().getMethod("onAnimationFinished",
                             new Class[] { TpAnimation.class });
-            log("found onAnimationFinished callback");
         } catch (Exception e) {
-            log("no callback set");
+            // fine, don't use the callback
+        }
+    }
+
+    /**
+     * Checks if the user has implemented
+     * public void onAnimationFinished(TpAnimation a)
+     */
+    private void findLoopEndEventCallback() {
+        try {
+            loopEndEvent =
+                    parent.getClass().getMethod("onLoopEnd",
+                            new Class[] { TpAnimation.class });
+        } catch (Exception e) {
+            // fine, don't use the callback
         }
     }
 
@@ -382,6 +399,7 @@ public class TpAnimation {
         // check if finished
         if (elapsedMillis >= durationMillis) {
             loopCount++;
+            loopEndCallback();
             if (isLooping) {
                 elapsedMillis = 0;
                 if (isMirroring) {
@@ -426,6 +444,7 @@ public class TpAnimation {
         if (isForwardPlayback && currentFrame == numberOfFrames - 1
                 || !isForwardPlayback && currentFrame == 0) { // end of loop
             loopCount++;
+            loopEndCallback();
             if (isMirroring) {
                 isForwardPlayback = !isForwardPlayback;
             }
@@ -472,6 +491,19 @@ public class TpAnimation {
             }
             catch (Exception e) {
                 log("onAnimationFinished callback error - disabling.", true);
+                e.printStackTrace();
+                finishedEvent = null;
+            }
+        }
+    }
+
+    private void loopEndCallback() {
+        if (loopEndEvent != null) {
+            try {
+                loopEndEvent.invoke(parent, new Object[] {this});
+            }
+            catch (Exception e) {
+                log("onLoopEndEvent callback error - disabling.", true);
                 e.printStackTrace();
                 finishedEvent = null;
             }

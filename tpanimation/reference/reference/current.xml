@@ -236,6 +236,23 @@
  visibility="public"
 >
 </method>
+<method name="getValueOf"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Object">
+</parameter>
+<parameter name="lookingForValue" type="java.lang.String">
+</parameter>
+<exception name="Exception" type="java.lang.Exception">
+</exception>
+</method>
 <method name="isDouble"
  return="boolean"
  abstract="false"
@@ -1185,6 +1202,17 @@
  transient="false"
  volatile="false"
  value="18"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="COUNT"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="32"
  static="true"
  final="true"
  deprecated="not deprecated"

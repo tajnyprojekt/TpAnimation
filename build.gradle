@@ -1,5 +1,5 @@
 group 'com.tajnyprojekt'
-version '1.0'
+version LIB_VERSION
 
 apply plugin: 'java'
 
@@ -48,7 +48,7 @@ dependencies {
     compile group: 'org.processing', name: 'core', version: '3.3.7'
 
     // Robert Penner's easing library, see reference for github url
-    compile fileTree(dir: 'TpAnimation/library', include: 'easing.jar')
+    compile fileTree(dir: 'tpanimation/library', include: 'easing.jar')
 }
 
 // run PApplet from example
@@ -62,24 +62,58 @@ task runApp (dependsOn: 'classes', type: JavaExec) {
 // documentation related tasks
 
 task cleanDocs(type: Delete) {
-    delete 'TpAnimation/reference/'
+    delete DOCS_PATH
 }
 
 task copyDocsTheme(type: Copy) {
-    from "docs-theme"
-    into "TpAnimation/reference"
+    from "assets/docs-theme"
+    into DOCS_PATH
 }
 
-task javadocDoclava(type: Javadoc, dependsOn: project.configurations.doclava) {
+javadoc {
+    dependsOn cleanDocs, project.configurations.doclava
+    finalizedBy copyDocsTheme
+
     failOnError = true
     source = sourceSets.main.java.srcDirs
     exclude "example"
     classpath = sourceSets.main.runtimeClasspath
-    destinationDir = file("TpAnimation/reference/")
+    destinationDir = file(DOCS_PATH)
     title = null
     options.doclet = "com.google.doclava.Doclava"
     options.docletpath = configurations.doclava.files.asType(List)
 }
 
-javadocDoclava.dependsOn cleanDocs
-javadocDoclava.finalizedBy copyDocsTheme
+// packaging
+
+task cleanLibrary(type: Delete) {
+    delete fileTree(JAR_PATH) { include 'TpAnimation*.jar' }
+}
+
+task copyLibrary(type: Copy) {
+    from "build/libs/"
+    into JAR_PATH
+}
+
+String bindTmpl(tmpl, output, params) {
+    def engine = new groovy.text.SimpleTemplateEngine()
+    output.write engine.createTemplate(tmpl).make(params).toString()
+}
+
+task genetareLibraryProperties {
+    bindTmpl(
+            file("assets/library.properties.tmpl"),
+            file("tpanimation/library.properties"),
+            [
+                    title: LIB_TITLE,
+                    version: LIB_VERSION,
+                    author: LIB_AUTHOR,
+                    buildNumber: 1,
+            ])
+}
+
+jar {
+    finalizedBy copyLibrary, genetareLibraryProperties, javadoc
+    exclude "example"
+    archiveName "${LIB_TITLE}.${jar.extension}"
+}
