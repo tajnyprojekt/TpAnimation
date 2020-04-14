@@ -22,10 +22,10 @@ void setup() {
   
   // animations setup, we need two separate animation objects to run them independently
   hoverAnimation = new TpAnimation(this, 400)
-        .addVariableAnimation("boxScale1", 1.0, 1.2, TpEasing.ELASTIC_IN);
+        .addVariableAnimation("boxScale1", 1.0, 1.2, TpEasing.SINE_OUT);
    
   clickAnimation = new TpAnimation(this, 400)
-        .addVariableAnimation("boxScale2", 1.0, 0.6, TpEasing.BACK_IN);
+        .addVariableAnimation("boxScale2", 1.0, 0.6, TpEasing.EXPO_OUT);
       
   
   // load images and set some styles
@@ -43,7 +43,14 @@ void setup() {
 }
 
 void draw() {
-  background(12, 232, 163);
+  
+  // make some feedback when mouse is pressed over the box
+  if (isMousePressed && mousePressed) {
+    image(get(), -10, -10, width + 20, height + 20);  
+  }
+  else {
+    background(12, 232, 163);
+  }
   
   // draw box
   float boxW = box.width * boxScale1 * boxScale2;

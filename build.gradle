@@ -48,7 +48,7 @@ dependencies {
     compile group: 'org.processing', name: 'core', version: '3.3.7'
 
     // Robert Penner's easing library, see reference for github url
-    compile fileTree(dir: 'tpanimation/library', include: 'easing.jar')
+    compile fileTree(dir: "${OUT_PATH}/library", include: 'easing.jar')
 }
 
 // run PApplet from example
@@ -62,12 +62,12 @@ task runApp (dependsOn: 'classes', type: JavaExec) {
 // documentation related tasks
 
 task cleanDocs(type: Delete) {
-    delete DOCS_PATH
+    delete "${OUT_PATH}/reference"
 }
 
 task copyDocsTheme(type: Copy) {
     from "assets/docs-theme"
-    into DOCS_PATH
+    into "${OUT_PATH}/reference"
 }
 
 javadoc {
@@ -78,7 +78,7 @@ javadoc {
     source = sourceSets.main.java.srcDirs
     exclude "example"
     classpath = sourceSets.main.runtimeClasspath
-    destinationDir = file(DOCS_PATH)
+    destinationDir = file("${OUT_PATH}/reference")
     title = null
     options.doclet = "com.google.doclava.Doclava"
     options.docletpath = configurations.doclava.files.asType(List)
@@ -87,12 +87,12 @@ javadoc {
 // packaging
 
 task cleanLibrary(type: Delete) {
-    delete fileTree(JAR_PATH) { include 'TpAnimation*.jar' }
+    delete fileTree("${OUT_PATH}/library") { include 'TpAnimation*.jar' }
 }
 
 task copyLibrary(type: Copy) {
     from "build/libs/"
-    into JAR_PATH
+    into "${OUT_PATH}/library"
 }
 
 String bindTmpl(tmpl, output, params) {
@@ -103,7 +103,7 @@ String bindTmpl(tmpl, output, params) {
 task genetareLibraryProperties {
     bindTmpl(
             file("assets/library.properties.tmpl"),
-            file("tpanimation/library.properties"),
+            file("${OUT_PATH}/library.properties"),
             [
                     title: LIB_TITLE,
                     version: LIB_VERSION,
