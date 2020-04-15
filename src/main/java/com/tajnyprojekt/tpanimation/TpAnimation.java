@@ -1118,7 +1118,7 @@ public class TpAnimation {
      */
     public TpAnimation setLoopMirror(boolean isMirroring) {
         if (isPlaying || isPaused) {
-            log("Playback in progress - setting duration not allowed. Stop the animation first.", true);
+            log("Playback in progress - setting loopMirror not allowed. Stop the animation first.", true);
             return this;
         }
         this.isMirroring = isMirroring;
@@ -1143,7 +1143,7 @@ public class TpAnimation {
      */
     public TpAnimation setForwardPlayback(boolean isPlaybackForward) {
         if (isPlaying || isPaused) {
-            log("Playback in progress - changing outputFilenamePattern not allowed. Stop the animation first.",
+            log("Playback in progress - changing forward playback not allowed. Stop the animation first.",
                     true);
             return this;
         }
@@ -1254,7 +1254,7 @@ public class TpAnimation {
      */
     public TpAnimation setOutputDir(String outputDir) {
         if (isRendering) {
-            System.err.println("Rendering in progress - setting outputFilenamePattern not allowed.");
+            System.err.println("Rendering in progress - setting outputDir not allowed.");
         }
         else {
             if (outputDir.endsWith("/") || outputDir.endsWith("\\")) {

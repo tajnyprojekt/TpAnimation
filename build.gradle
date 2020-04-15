@@ -95,6 +95,11 @@ task copyLibrary(type: Copy) {
     into "${OUT_PATH}/library"
 }
 
+task copyLicense(type: Copy) {
+    from "LICENSE.txt"
+    into "${OUT_PATH}/library"
+}
+
 String bindTmpl(tmpl, output, params) {
     def engine = new groovy.text.SimpleTemplateEngine()
     output.write engine.createTemplate(tmpl).make(params).toString()
@@ -113,7 +118,11 @@ task genetareLibraryProperties {
 }
 
 jar {
-    finalizedBy copyLibrary, genetareLibraryProperties, javadoc
     exclude "example"
     archiveName "${LIB_TITLE}.${jar.extension}"
+}
+
+task releaseLibrary {
+    dependsOn cleanLibrary
+    finalizedBy jar, copyLibrary, copyLicense, genetareLibraryProperties, javadoc
 }
