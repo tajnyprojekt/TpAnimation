@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
  *
  * @see TpAnimation
  * @see TpAnimation#addVariableAnimation(String, float, float, int, int, int)
- * @see TpAnimation#addArrayItemAnimation(Object, int, float, float, int, int, int)
+ * @see TpAnimation#addArrayItemAnimation(float[], int, float, float, int, int, int)
  * @see TpEasing
  */
 public class TpAnimatedVariable {
@@ -30,6 +30,10 @@ public class TpAnimatedVariable {
     private Object var;
 
     private Object array;
+    private int[] intArray;
+    private float[] floatArray;
+    private double[] doubleArray;
+
     private int index;
 
     private boolean ignore;
@@ -98,14 +102,15 @@ public class TpAnimatedVariable {
         findFieldInSketch(varName);
     }
 
+    // int array constructor
+
     /**
      * Creates an object representing the variable that will be animated.<br>
      * The variable will be identified by array reference and the item index.<br>
-     * The type of the passed field must be <code>int</code>, <code>float</code> or <code>double</code>
-     * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
+     * The type of the passed array must be of type <code>int[]</code>.<br>
      * This version of constructor let's you create variable's transition taking the full lenght of parent animation.
      *
-     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableAnimation(String, float, float, int, int, int)
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addArrayItemAnimation(int[], int, float, float, int, int, int)
      * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
      *
      * @param animation the animation that variable belongs to
@@ -116,7 +121,7 @@ public class TpAnimatedVariable {
      * @param easing number indicating which easing function to use
      * @see TpEasing available easing functions
      */
-    public TpAnimatedVariable(TpAnimation animation, Object array, int index, float from, float to, int easing) {
+    public TpAnimatedVariable(TpAnimation animation, int[] array, int index, float from, float to, int easing) {
         this(animation, array, index, from, to, 0, 0, easing);
         isFullLength = true;
     }
@@ -124,12 +129,11 @@ public class TpAnimatedVariable {
     /**
      * Creates an object representing variable that will be animated.<br>
      * The variable will be identified by array reference and the item index.<br>
-     * The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
-     * and marked as public in the main scope of your Processing sketch in order to be animated.<br>
+     * The type of the passed array must be of type <code>int[]</code>.<br>
      * This version of constructor let's you create variable's transition that begins or end with some time offset
      * to the parent animation.
      *
-     * @see com.tajnyprojekt.tpanimation.TpAnimation#addVariableAnimation(String, float, float, int, int, int)
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addArrayItemAnimation(int[], int, float, float, int, int, int)
      * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
      *
      * @param animation the animation that variable belongs to
@@ -142,14 +146,122 @@ public class TpAnimatedVariable {
      * @param easing the number indicating which easing function to use
      * @see TpEasing available easing functions.
      */
-    public TpAnimatedVariable(TpAnimation animation, Object array, int index, float from, float to,
+    public TpAnimatedVariable(TpAnimation animation, int[] array, int index, float from, float to,
                               int startMillis, int endMillis, int easing) {
         init(animation, from, to, startMillis, endMillis, easing);
         isField = false;
-        this.array = array;
+        checkArray(array);
+        intArray = array;
         this.index = index;
-        checkArray();
+        fieldType = int[].class;
+    }
 
+    // float array constructor
+
+    /**
+     * Creates an object representing the variable that will be animated.<br>
+     * The variable will be identified by array reference and the item index.<br>
+     * The type of the passed array must be of type <code>float[]</code>.<br>
+     * This version of constructor let's you create variable's transition taking the full lenght of parent animation.
+     *
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addArrayItemAnimation(float[], int, float, float, int, int, int)
+     * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
+     *
+     * @param animation the animation that variable belongs to
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param easing number indicating which easing function to use
+     * @see TpEasing available easing functions
+     */
+    public TpAnimatedVariable(TpAnimation animation, float[] array, int index, float from, float to, int easing) {
+        this(animation, array, index, from, to, 0, 0, easing);
+        isFullLength = true;
+    }
+
+    /**
+     * Creates an object representing variable that will be animated.<br>
+     * The variable will be identified by array reference and the item index.<br>
+     * The type of the passed array must be of type <code>int[]</code>.<br>
+     * This version of constructor let's you create variable's transition that begins or end with some time offset
+     * to the parent animation.
+     *
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addArrayItemAnimation(float[], int, float, float, int, int, int)
+     * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
+     *
+     * @param animation the animation that variable belongs to
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transitio
+     * @param startMillis the start time in animation for value transition
+     * @param endMillis the end time in animation for value transition
+     * @param easing the number indicating which easing function to use
+     * @see TpEasing available easing functions.
+     */
+    public TpAnimatedVariable(TpAnimation animation, float[] array, int index, float from, float to,
+                              int startMillis, int endMillis, int easing) {
+        init(animation, from, to, startMillis, endMillis, easing);
+        isField = false;
+        checkArray(array);
+        floatArray = array;
+        this.index = index;
+        fieldType = float[].class;
+    }
+
+    // double array constructor
+
+    /**
+     * Creates an object representing the variable that will be animated.<br>
+     * The variable will be identified by array reference and the item index.<br>
+     * The type of the passed array must be of type <code>double[]</code>.<br>
+     * This version of constructor let's you create variable's transition taking the full lenght of parent animation.
+     *
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addArrayItemAnimation(double[], int, float, float, int, int, int)
+     * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
+     *
+     * @param animation the animation that variable belongs to
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param easing number indicating which easing function to use
+     * @see TpEasing available easing functions
+     */
+    public TpAnimatedVariable(TpAnimation animation, double[] array, int index, float from, float to, int easing) {
+        this(animation, array, index, from, to, 0, 0, easing);
+        isFullLength = true;
+    }
+
+    /**
+     * Creates an object representing variable that will be animated.<br>
+     * The variable will be identified by array reference and the item index.<br>
+     * The type of the passed array must be of type <code>double[]</code>.<br>
+     * This version of constructor let's you create variable's transition that begins or end with some time offset
+     * to the parent animation.
+     *
+     * @see com.tajnyprojekt.tpanimation.TpAnimation#addArrayItemAnimation(double[], int, float, float, int, int, int)
+     * <code>TpAnimation.addVariableAnimation</code> for full description with an example.
+     *
+     * @param animation the animation that variable belongs to
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param startMillis the start time in animation for value transition
+     * @param endMillis the end time in animation for value transition
+     * @param easing the number indicating which easing function to use
+     * @see TpEasing available easing functions.
+     */
+    public TpAnimatedVariable(TpAnimation animation, double[] array, int index, float from, float to,
+                              int startMillis, int endMillis, int easing) {
+        init(animation, from, to, startMillis, endMillis, easing);
+        isField = false;
+        checkArray(array);
+        doubleArray = array;
+        this.index = index;
+        fieldType = double[].class;
     }
 
     private void init(TpAnimation animation, float from, float to,
@@ -212,25 +324,11 @@ public class TpAnimatedVariable {
     /**
      * Checks type of array
      */
-    @SuppressWarnings("rawtypes")
-    private void checkArray() {
-        try {
-            fieldType = array.getClass();
-            if (!(isIntArray() || isFloatArray() || isDoubleArray())) {
-                ignore = true;
-                TpAnimation.log("Wrong type of array: " + fieldType.toString()
-                        + ". \nArray containing item to be animated must be of type int[], float[] or double[].", true);
-            }
-        }
-        catch (Exception e) {
-            ignore = true;
-            TpAnimation.log("An error occured during looking for array"
-                    + ". \nMake sure that the array is marked as 'public', "
-                    + "and located in the main scope of the sketch (above setup()), \ne.g. public float[] "
-                    + "someArray;", true);
-            e.printStackTrace();
-            parent.exit();
-        }
+    private void checkArray(Object arr) {
+       if (arr == null) {
+           ignore = true;
+           TpAnimation.log("The array is null - ignoring.", true);
+       }
     }
 
     /**

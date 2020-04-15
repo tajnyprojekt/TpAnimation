@@ -307,7 +307,7 @@ Summary:
 
  TpAnimation allows you to configure value transitions once, during sketch initialization, in a little declarative way,
  and then does all the calculations for you behind the scenes, so you can focus on your awesome visuals and stuff, instead
- coding transitions, timers, interpolations and easings.<br>
+ coding transitions, timers, interpolations and easing.<br>
  You can choose from 32 available easing functions (30 of them come from
  <a href="https://github.com/jesusgollonet/processing-penner-easing">Robert Penner's easing library</a>.
  See <code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">TpEasing</a></code> for the list of all available easing functions waiting for you.<br><br>
@@ -318,16 +318,26 @@ Summary:
  at the beginning of each <code>draw()</code> call. The animation won't work if you override the values
  inside your sketch's <code>draw()</code> method.<br><br>
 
- The library fires an event when playback or rendering is finished (but not when <code>stop()</code> is called).
- Implement a method <code class="language-processing">public void onAnimationFinished(TpAnimation a) { ... }</code>
- to listen to this event and get notified when animation is finished.<br><br>
-
  When your animation looks perfect you can easily render it as frames with <code><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#render()">render()</a></code></code> method. After that, you can find the frames in the <code>animationOutput/</code> directory in your sketch's folder. You have to assemble
  generated frames to a video on your own with e.g. ffmpeg, PDE's Movie Maker, After Effects or any other tool you like.<br>
- Default render frame rate is 30fps, you can change it with <code><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#setOutputFrameRate(int)">setOutputFrameRate(int)</a></code></code> method<br><br>
+ Default render frame rate is 30fps, you can change it with <code><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#setOutputFrameRate(int)">setOutputFrameRate(int)</a></code></code> method<br><br> *
+
+ The library fires an event when playback or rendering is finished (but not when <code>stop()</code> is called).
+ Implement a method <code class="language-processing">public void onAnimationFinished(TpAnimation a) { ... }</code>
+ in your sketch to listen to this event and get notified when animation is finished.<br><br>
+
+ The library also fires an event at the end of each loop (also when playing once using <code>play()</code>).
+ Implement a method <code class="language-processing">public void onLoopEnd(TpAnimation a) { ... }</code>
+ in your sketch to listen to this event and get notified when animation is finished.<br><br>
+
+ When both
+ (<code class="language-processing">public void onAnimationFinished(TpAnimation a) { ... }</code>
+ and <code class="language-processing">public void onLoopEnd(TpAnimation a) { ... }</code>) event callbacks are implemented,
+ after all loops are finished (e.g. when using <code>play()</code>) the <code>onLoopEnd</code> event will be called
+ first, and then the <code>onAnimationFinished</code> event.<br><br><br>
 
 
- Example basic usage:<br><br>
+ Example basic usage of the library:<br><br>
 <pre><code class=language-processing>
 import com.tajnyprojekt.tpanimation.*;
 
@@ -492,7 +502,7 @@ public void onAnimationFinished(TpAnimation a) {
             <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int)">addArrayItemAnimation</a></span>(Object array, int index, float from, float to, int easingFunctionNumber)
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int, int)">addArrayItemAnimation</a></span>(float[] array, int index, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)
         
         <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
   
@@ -510,7 +520,7 @@ public void onAnimationFinished(TpAnimation a) {
             <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float)">addArrayItemAnimation</a></span>(Object array, int index, float from, float to)
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float)">addArrayItemAnimation</a></span>(float[] array, int index, float from, float to)
         
         <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
   
@@ -528,7 +538,7 @@ public void onAnimationFinished(TpAnimation a) {
             <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int)">addArrayItemAnimation</a></span>(Object array, int index, float from, float to, int startMillis, int endMillis)
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float)">addArrayItemAnimation</a></span>(int[] array, int index, float from, float to)
         
         <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
   
@@ -546,7 +556,7 @@ public void onAnimationFinished(TpAnimation a) {
             <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int, int)">addArrayItemAnimation</a></span>(Object array, int index, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(double[], int, float, float, int, int)">addArrayItemAnimation</a></span>(double[] array, int index, float from, float to, int startMillis, int endMillis)
         
         <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
   
@@ -564,15 +574,141 @@ public void onAnimationFinished(TpAnimation a) {
             <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(com.tajnyprojekt.tpanimation.TpAnimatedVariable)">addVariableAnimation</a></span>(<a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a> variable)
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int, int, int)">addArrayItemAnimation</a></span>(int[] array, int index, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)
         
-        <div class="jd-descrdiv">Adds object defining the variable to be animated.</div>
+        <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
   
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int, int)">addArrayItemAnimation</a></span>(int[] array, int index, float from, float to, int startMillis, int endMillis)
+        
+        <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int)">addArrayItemAnimation</a></span>(float[] array, int index, float from, float to, int startMillis, int endMillis)
+        
+        <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int)">addArrayItemAnimation</a></span>(float[] array, int index, float from, float to, int easingFunctionNumber)
+        
+        <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(double[], int, float, float)">addArrayItemAnimation</a></span>(double[] array, int index, float from, float to)
+        
+        <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int)">addArrayItemAnimation</a></span>(int[] array, int index, float from, float to, int easingFunctionNumber)
+        
+        <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(double[], int, float, float, int)">addArrayItemAnimation</a></span>(double[] array, int index, float from, float to, int easingFunctionNumber)
+        
+        <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(double[], int, float, float, int, int, int)">addArrayItemAnimation</a></span>(double[] array, int index, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)
+        
+        <div class="jd-descrdiv">Adds the sketch's array item to the animation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -583,24 +719,6 @@ public void onAnimationFinished(TpAnimation a) {
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int)">addVariableAnimation</a></span>(String name, float from, float to, int startMillis, int endMillis)
-        
-        <div class="jd-descrdiv">Adds the sketch's field to the animation.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int)">addVariableAnimation</a></span>(String name, float from, float to, int easingFunctionNumber)
         
         <div class="jd-descrdiv">Adds the sketch's field to the animation.</div>
   
@@ -637,6 +755,42 @@ public void onAnimationFinished(TpAnimation a) {
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation</a></span>(String name, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)
+        
+        <div class="jd-descrdiv">Adds the sketch's field to the animation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(com.tajnyprojekt.tpanimation.TpAnimatedVariable)">addVariableAnimation</a></span>(<a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a> variable)
+        
+        <div class="jd-descrdiv">Adds object defining the variable to be animated.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int)">addVariableAnimation</a></span>(String name, float from, float to, int easingFunctionNumber)
         
         <div class="jd-descrdiv">Adds the sketch's field to the animation.</div>
   
@@ -981,9 +1135,9 @@ public void onAnimationFinished(TpAnimation a) {
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#loop(int)">loop</a></span>(int n)
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#loop()">loop</a></span>()
         
-        <div class="jd-descrdiv">Starts playback of <code>n</code> loops of the animation.</div>
+        <div class="jd-descrdiv">Starts playback of the animation in an infinite loop.</div>
   
   </td></tr>
 
@@ -999,9 +1153,9 @@ public void onAnimationFinished(TpAnimation a) {
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#loop()">loop</a></span>()
+        <span class="sympad"><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#loop(int)">loop</a></span>(int n)
         
-        <div class="jd-descrdiv">Starts playback of the animation in an infinite loop.</div>
+        <div class="jd-descrdiv">Starts playback of <code>n</code> loops of the animation.</div>
   
   </td></tr>
 
@@ -1569,7 +1723,7 @@ From class
 
 
 
-<a id="addArrayItemAnimation(java.lang.Object, int, float, float, int)"></a>
+<a id="addArrayItemAnimation(float[], int, float, float, int, int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1582,208 +1736,7 @@ From class
         <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
       </span>
       <span class="sympad">addArrayItemAnimation</span>
-      <span class="normal">(Object array, int index, float from, float to, int easingFunctionNumber)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
- The type of the passed array must be declared as <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
- in the main scope of your Processing sketch in order to be animated.<br><br></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>array</th>
-          <td>the array containing field that will be animated</td>
-        </tr>
-        <tr>
-          <th>index</th>
-          <td>the index of the array item that will be animated</td>
-        </tr>
-        <tr>
-          <th>from</th>
-          <td>the initial value for transition</td>
-        </tr>
-        <tr>
-          <th>to</th>
-          <td>the final value for transition</td>
-        </tr>
-        <tr>
-          <th>easingFunctionNumber</th>
-          <td>the number indicating which easing function to use</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int)">addArrayItemAnimation(Object, int, float, float, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
-      </ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="addArrayItemAnimation(java.lang.Object, int, float, float)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
-      </span>
-      <span class="sympad">addArrayItemAnimation</span>
-      <span class="normal">(Object array, int index, float from, float to)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
- The type of the passed array must be declared as <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
- in the main scope of your Processing sketch in order to be animated.<br><br></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>array</th>
-          <td>the array containing field that will be animated</td>
-        </tr>
-        <tr>
-          <th>index</th>
-          <td>the index of the array item that will be animated</td>
-        </tr>
-        <tr>
-          <th>from</th>
-          <td>the initial value for transition</td>
-        </tr>
-        <tr>
-          <th>to</th>
-          <td>the final value for transition</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int)">addArrayItemAnimation(Object, int, float, float, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
-      </ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="addArrayItemAnimation(java.lang.Object, int, float, float, int, int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
-      </span>
-      <span class="sympad">addArrayItemAnimation</span>
-      <span class="normal">(Object array, int index, float from, float to, int startMillis, int endMillis)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
- The type of the passed array must be declared as <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
- in the main scope of your Processing sketch in order to be animated.<br><br></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>array</th>
-          <td>the array containing field that will be animated</td>
-        </tr>
-        <tr>
-          <th>index</th>
-          <td>the index of the array item that will be animated</td>
-        </tr>
-        <tr>
-          <th>from</th>
-          <td>the initial value for transition</td>
-        </tr>
-        <tr>
-          <th>to</th>
-          <td>the final value for transition</td>
-        </tr>
-        <tr>
-          <th>startMillis</th>
-          <td>the start time in animation for value transition</td>
-        </tr>
-        <tr>
-          <th>endMillis</th>
-          <td>the end time in animation for value transition</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int)">addArrayItemAnimation(Object, int, float, float, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
-      </ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="addArrayItemAnimation(java.lang.Object, int, float, float, int, int, int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
-      </span>
-      <span class="sympad">addArrayItemAnimation</span>
-      <span class="normal">(Object array, int index, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)</span>
+      <span class="normal">(float[] array, int index, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1861,7 +1814,7 @@ void setup() {
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int, int, int)">addArrayItemAnimation(int[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(double[], int, float, float, int, int, int)">addArrayItemAnimation(double[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
       </ul>
   </div>
 
@@ -1869,7 +1822,7 @@ void setup() {
 </div>
 
 
-<a id="addVariableAnimation(com.tajnyprojekt.tpanimation.TpAnimatedVariable)"></a>
+<a id="addArrayItemAnimation(float[], int, float, float)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1881,8 +1834,8 @@ void setup() {
          
         <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
       </span>
-      <span class="sympad">addVariableAnimation</span>
-      <span class="normal">(<a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a> variable)</span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(float[] array, int index, float from, float to)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1894,15 +1847,26 @@ void setup() {
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Adds object defining the variable to be animated.<br>
- Recommended method is to use <code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code>
- or it's variations.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>float[]</code>.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>variable</th>
-          <td>the already configured variable object</td>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
         </tr>
       </table>
   </div>
@@ -1912,7 +1876,736 @@ void setup() {
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int, int)">addArrayItemAnimation(float[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(int[], int, float, float)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(int[] array, int index, float from, float to)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>int[]</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int, int, int)">addArrayItemAnimation(int[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(double[], int, float, float, int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(double[] array, int index, float from, float to, int startMillis, int endMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>double[]</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>startMillis</th>
+          <td>the start time in animation for value transition</td>
+        </tr>
+        <tr>
+          <th>endMillis</th>
+          <td>the end time in animation for value transition</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(double[], int, float, float, int, int, int)">addArrayItemAnimation(double[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(int[], int, float, float, int, int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(int[] array, int index, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be declared as <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
+ in the main scope of your Processing sketch in order to be animated.<br><br>
+ Example:<br><br>
+<pre><code class="language-processing">
+import com.tajnyprojekt.tpanimation.*;
+
+
+TpAnimation animation;<br><br>
+
+&sol;/ declare your array
+int[] params = {1, 0};
+
+
+void setup() {
+    ...
+    // configure the animation
+    animation = new TpAnimation(this, 1000)
+        .addArrayItemAnimation(params, 0, 1, 800)
+        .addArrayItemAnimation(params, 1, 0, 600, 200, 800, TpEasing.EXPO_IN)
+        ;
+    ...
+}
+</code></pre>
+ <br>
+ Use <code>startMillis</code> and <code>endMillis</code> when want to animate the variable's value not throughout
+ the whole animation time but for a certain period.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>startMillis</th>
+          <td>the start time in animation for value transition</td>
+        </tr>
+        <tr>
+          <th>endMillis</th>
+          <td>the end time in animation for value transition</td>
+        </tr>
+        <tr>
+          <th>easingFunctionNumber</th>
+          <td>the number indicating which easing function to use</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(int[], int, float, float, int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(int[] array, int index, float from, float to, int startMillis, int endMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>int[]</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>startMillis</th>
+          <td>the start time in animation for value transition</td>
+        </tr>
+        <tr>
+          <th>endMillis</th>
+          <td>the end time in animation for value transition</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int, int, int)">addArrayItemAnimation(int[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(float[], int, float, float, int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(float[] array, int index, float from, float to, int startMillis, int endMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>int[]</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>startMillis</th>
+          <td>the start time in animation for value transition</td>
+        </tr>
+        <tr>
+          <th>endMillis</th>
+          <td>the end time in animation for value transition</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int, int)">addArrayItemAnimation(float[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(float[], int, float, float, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(float[] array, int index, float from, float to, int easingFunctionNumber)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>float[]</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>easingFunctionNumber</th>
+          <td>the number indicating which easing function to use</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int, int, int)">addArrayItemAnimation(int[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(double[], int, float, float)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(double[] array, int index, float from, float to)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>double[]</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(double[], int, float, float, int, int, int)">addArrayItemAnimation(double[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(int[], int, float, float, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(int[] array, int index, float from, float to, int easingFunctionNumber)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>int[]</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>easingFunctionNumber</th>
+          <td>the number indicating which easing function to use</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int, int, int)">addArrayItemAnimation(int[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(double[], int, float, float, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(double[] array, int index, float from, float to, int easingFunctionNumber)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>double[]</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>easingFunctionNumber</th>
+          <td>the number indicating which easing function to use</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(double[], int, float, float, int, int, int)">addArrayItemAnimation(double[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addArrayItemAnimation(double[], int, float, float, int, int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addArrayItemAnimation</span>
+      <span class="normal">(double[] array, int index, float from, float to, int startMillis, int endMillis, int easingFunctionNumber)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+ The type of the passed array must be <code>double[]</code>.<br><br>
+ Example:<br><br>
+<pre><code class="language-processing">
+import com.tajnyprojekt.tpanimation.*;
+
+
+TpAnimation animation;<br><br>
+
+&sol;/ declare your array
+double[] params = {0.2, 0.7};
+
+
+void setup() {
+    ...
+    // configure the animation
+    animation = new TpAnimation(this, 1000)
+        .addArrayItemAnimation(params, 0, 1, 100)
+        .addArrayItemAnimation(params, 1, 0.1, 3.5, 200, 800, TpEasing.EXPO_IN)
+        ;
+    ...
+}
+</code></pre>
+ <br>
+ Use <code>startMillis</code> and <code>endMillis</code> when want to animate the variable's value not throughout
+ the whole animation time but for a certain period.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>array</th>
+          <td>the array containing field that will be animated</td>
+        </tr>
+        <tr>
+          <th>index</th>
+          <td>the index of the array item that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>startMillis</th>
+          <td>the start time in animation for value transition</td>
+        </tr>
+        <tr>
+          <th>endMillis</th>
+          <td>the end time in animation for value transition</td>
+        </tr>
+        <tr>
+          <th>easingFunctionNumber</th>
+          <td>the number indicating which easing function to use</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(int[], int, float, float, int, int, int)">addArrayItemAnimation(int[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int, int)">addArrayItemAnimation(float[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
       </ul>
   </div>
 
@@ -1979,70 +2672,7 @@ void setup() {
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">this method for full description with an example.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int)">addArrayItemAnimation(Object, int, float, float, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
-      </ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="addVariableAnimation(java.lang.String, float, float, int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
-      </span>
-      <span class="sympad">addVariableAnimation</span>
-      <span class="normal">(String name, float from, float to, int easingFunctionNumber)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's field to the animation. The field will be identified by it's name.<br>
- The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
- and marked as public in the main scope of your Processing sketch in order to be animated.<br></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>name</th>
-          <td>the name of the sketch's field that will be animated</td>
-        </tr>
-        <tr>
-          <th>from</th>
-          <td>the initial value for transition</td>
-        </tr>
-        <tr>
-          <th>to</th>
-          <td>the final value for transition</td>
-        </tr>
-        <tr>
-          <th>easingFunctionNumber</th>
-          <td>the number indicating which easing function to use</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">this method for full description with an example.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int)">addArrayItemAnimation(Object, int, float, float, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">this method for full description with an example.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int, int)">addArrayItemAnimation(float[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
       </ul>
   </div>
 
@@ -2101,7 +2731,7 @@ void setup() {
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">this method for full description with an example.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int)">addArrayItemAnimation(Object, int, float, float, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">this method for full description with an example.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int, int)">addArrayItemAnimation(float[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
       </ul>
   </div>
 
@@ -2195,7 +2825,121 @@ void setup() {
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(java.lang.Object, int, float, float, int, int)">addArrayItemAnimation(Object, int, float, float, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int, int)">addArrayItemAnimation(float[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addVariableAnimation(com.tajnyprojekt.tpanimation.TpAnimatedVariable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addVariableAnimation</span>
+      <span class="normal">(<a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a> variable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds object defining the variable to be animated.<br>
+ Recommended method is to use <code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code>
+ or it's variations.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>variable</th>
+          <td>the already configured variable object</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="addVariableAnimation(java.lang.String, float, float, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html">TpAnimation</a>
+      </span>
+      <span class="sympad">addVariableAnimation</span>
+      <span class="normal">(String name, float from, float to, int easingFunctionNumber)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds the sketch's field to the animation. The field will be identified by it's name.<br>
+ The type of the passed field must be declared as <code>int</code>, <code>float</code> or <code>double</code>
+ and marked as public in the main scope of your Processing sketch in order to be animated.<br></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>name</th>
+          <td>the name of the sketch's field that will be animated</td>
+        </tr>
+        <tr>
+          <th>from</th>
+          <td>the initial value for transition</td>
+        </tr>
+        <tr>
+          <th>to</th>
+          <td>the final value for transition</td>
+        </tr>
+        <tr>
+          <th>easingFunctionNumber</th>
+          <td>the number indicating which easing function to use</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the animation object to chain another method calls</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">this method for full description with an example.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpEasing.html">available easing functions.</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addVariableAnimation(java.lang.String, float, float, int, int, int)">addVariableAnimation(String, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#addArrayItemAnimation(float[], int, float, float, int, int, int)">addArrayItemAnimation(float[], int, float, float, int, int, int)</a></code></li><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimatedVariable.html">TpAnimatedVariable</a></code></li>
       </ul>
   </div>
 
@@ -2931,6 +3675,43 @@ void setup() {
 </div>
 
 
+<a id="loop()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">loop</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Starts playback of the animation in an infinite loop.<br>
+ Use <code>stop()</code> to disable looping.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#stop()">stop()</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="loop(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -2967,43 +3748,6 @@ void setup() {
         </tr>
       </table>
   </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#stop()">stop()</a></code></li>
-      </ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="loop()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">loop</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Starts playback of the animation in an infinite loop.<br>
- Use <code>stop()</code> to disable looping.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">See Also</h5>
       <ul class="nolist"><li><code><a href="../../../com/tajnyprojekt/tpanimation/TpAnimation.html#stop()">stop()</a></code></li>

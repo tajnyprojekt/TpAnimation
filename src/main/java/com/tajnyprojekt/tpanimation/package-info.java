@@ -1,7 +1,7 @@
 /**
  * <h2>TpAnimation library</h2>
  * TpAnimation is a library for <a href="https://processing.org/">Processing</a>,
- * that aims to simplfy the process of creating animations.
+ * that aims to simplify the process of creating animations.
  * It takes care of value transitions, easing, interpolation, timing and playback.
  * It can also render your animation to frames.<br><br>
  * All you have to do is to define the start and end values for your sketch's variables or arrays,
@@ -9,7 +9,7 @@
  * You can play the animation just once with {@link com.tajnyprojekt.tpanimation.TpAnimation#play()},
  * play in a loop with {@link com.tajnyprojekt.tpanimation.TpAnimation#loop()}, then
  * {@link com.tajnyprojekt.tpanimation.TpAnimation#stop()} or
- * {@link com.tajnyprojekt.tpanimation.TpAnimation#pause()} it, and when you are OK with the results
+ * {@link com.tajnyprojekt.tpanimation.TpAnimation#pause()} it, and when you are satisfied with the results
  * {@link com.tajnyprojekt.tpanimation.TpAnimation#render()} it.
  * You also can {@link com.tajnyprojekt.tpanimation.TpAnimation#setForwardPlayback(boolean)},
  * {@link com.tajnyprojekt.tpanimation.TpAnimation#setLoopMirror(boolean)}
@@ -32,7 +32,7 @@
  * the variable to be <code>public</code> to work with.<br><br>
  * Next initialize the sketch and create 2500ms long animation, add transition for variable <code>h</code> between
  * <code>0</code> and <code>height</code> (window's height). Play the animation in an infinite loop at the end of
- * <code>setup()</code>. Then you can use your animated value in <code>draw()</code> e.g. to contol rect's height.<br><br>
+ * <code>setup()</code>. Then you can use your animated value in <code>draw()</code> e.g. to control rect's height.<br><br>
  *<pre><code class="language-processing">
  * ...
  *

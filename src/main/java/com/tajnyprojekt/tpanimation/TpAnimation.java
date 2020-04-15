@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
  * TpAnimation allows you to configure value transitions once, during sketch initialization, in a little declarative way,
  * and then does all the calculations for you behind the scenes, so you can focus on your awesome visuals and stuff, instead
- * coding transitions, timers, interpolations and easings.<br>
+ * coding transitions, timers, interpolations and easing.<br>
  * You can choose from 32 available easing functions (30 of them come from
  * <a href="https://github.com/jesusgollonet/processing-penner-easing">Robert Penner's easing library</a>.
  * See {@link TpEasing} for the list of all available easing functions waiting for you.<br><br>
@@ -23,16 +23,26 @@ import java.util.ArrayList;
  * at the beginning of each <code>draw()</code> call. The animation won't work if you override the values
  * inside your sketch's <code>draw()</code> method.<br><br>
  *
- * The library fires an event when playback or rendering is finished (but not when <code>stop()</code> is called).
- * Implement a method <code class="language-processing">public void onAnimationFinished(TpAnimation a) { ... }</code>
- * to listen to this event and get notified when animation is finished.<br><br>
- *
  * When your animation looks perfect you can easily render it as frames with <code>{@link #render()}</code> method. After that, you can find the frames in the <code>animationOutput/</code> directory in your sketch's folder. You have to assemble
  * generated frames to a video on your own with e.g. ffmpeg, PDE's Movie Maker, After Effects or any other tool you like.<br>
- * Default render frame rate is 30fps, you can change it with <code>{@link #setOutputFrameRate(int)}</code> method<br><br>
+ * Default render frame rate is 30fps, you can change it with <code>{@link #setOutputFrameRate(int)}</code> method<br><br> *
+ *
+ * The library fires an event when playback or rendering is finished (but not when <code>stop()</code> is called).
+ * Implement a method <code class="language-processing">public void onAnimationFinished(TpAnimation a) { ... }</code>
+ * in your sketch to listen to this event and get notified when animation is finished.<br><br>
+ *
+ * The library also fires an event at the end of each loop (also when playing once using <code>play()</code>).
+ * Implement a method <code class="language-processing">public void onLoopEnd(TpAnimation a) { ... }</code>
+ * in your sketch to listen to this event and get notified when animation is finished.<br><br>
+ *
+ * When both
+ * (<code class="language-processing">public void onAnimationFinished(TpAnimation a) { ... }</code>
+ * and <code class="language-processing">public void onLoopEnd(TpAnimation a) { ... }</code>) event callbacks are implemented,
+ * after all loops are finished (e.g. when using <code>play()</code>) the <code>onLoopEnd</code> event will be called
+ * first, and then the <code>onAnimationFinished</code> event.<br><br><br>
  *
  *
- * Example basic usage:<br><br>
+ * Example basic usage of the library:<br><br>
  *<pre><code class=language-processing>
  *import com.tajnyprojekt.tpanimation.*;
  *
@@ -474,7 +484,7 @@ public class TpAnimation {
     }
 
     /**
-     * Updates and calculated the time elapsed since start of the animation / loop.
+     * Updates and calculates the time elapsed since start of the animation / loop.
      */
     private void updateTimer() {
         int currentMillis = parent.millis();
@@ -524,7 +534,7 @@ public class TpAnimation {
      * @param to the final value for transition
      * @return the animation object to chain another method calls
      * @see #addVariableAnimation(String, float, float, int, int, int)
-     * @see #addArrayItemAnimation(Object, int, float, float, int, int)
+     * @see #addArrayItemAnimation(float[], int, float, float, int, int, int)
      * @see TpAnimatedVariable
      */
     public TpAnimation addVariableAnimation(String name, float from, float to) {
@@ -544,7 +554,7 @@ public class TpAnimation {
      * @return the animation object to chain another method calls
      * @see TpEasing available easing functions.
      * @see #addVariableAnimation(String, float, float, int, int, int)
-     * @see #addArrayItemAnimation(Object, int, float, float, int, int)
+     * @see #addArrayItemAnimation(float[], int, float, float, int, int, int)
      * @see TpAnimatedVariable
      */
     public TpAnimation addVariableAnimation(String name, float from, float to, int easingFunctionNumber) {
@@ -564,7 +574,7 @@ public class TpAnimation {
      * @param endMillis the end time in animation for value transition
      * @return the animation object to chain another method calls
      * @see #addVariableAnimation(String, float, float, int, int, int)
-     * @see #addArrayItemAnimation(Object, int, float, float, int, int)
+     * @see #addArrayItemAnimation(float[], int, float, float, int, int, int)
      * @see TpAnimatedVariable
      */
     public TpAnimation addVariableAnimation(String name, float from, float to, int startMillis, int endMillis) {
@@ -607,7 +617,7 @@ public class TpAnimation {
      * @param easingFunctionNumber the number indicating which easing function to use
      * @return the animation object to chain another method calls
      * @see TpEasing available easing functions.
-     * @see #addArrayItemAnimation(Object, int, float, float, int, int)
+     * @see #addArrayItemAnimation(float[], int, float, float, int, int, int)
      * @see TpAnimatedVariable
      */
     public TpAnimation addVariableAnimation(String name, float from, float to,
@@ -616,28 +626,28 @@ public class TpAnimation {
                 this, name, from, to, startMillis, endMillis, easingFunctionNumber));
     }
 
+    // int array
+
     /**
      * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
-     * The type of the passed array must be declared as <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
-     * in the main scope of your Processing sketch in order to be animated.<br><br>
+     * The type of the passed array must be <code>int[]</code>.
      *
      * @param array the array containing field that will be animated
      * @param index the index of the array item that will be animated
      * @param from the initial value for transition
      * @param to the final value for transition
      * @return the animation object to chain another method calls
-     * @see #addArrayItemAnimation(Object, int, float, float, int, int)
+     * @see #addArrayItemAnimation(int[], int, float, float, int, int, int)
      * @see #addVariableAnimation(String, float, float, int, int, int)
      * @see TpAnimatedVariable
      */
-    public TpAnimation addArrayItemAnimation(Object array, int index, float from, float to) {
+    public TpAnimation addArrayItemAnimation(int[] array, int index, float from, float to) {
         return addArrayItemAnimation(array, index, from, to, TpEasing.BASIC_INOUT);
     }
 
     /**
      * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
-     * The type of the passed array must be declared as <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
-     * in the main scope of your Processing sketch in order to be animated.<br><br>
+     * The type of the passed array must be <code>int[]</code>.
      *
      * @param array the array containing field that will be animated
      * @param index the index of the array item that will be animated
@@ -646,18 +656,17 @@ public class TpAnimation {
      * @param easingFunctionNumber the number indicating which easing function to use
      * @return the animation object to chain another method calls
      * @see TpEasing available easing functions.
-     * @see #addArrayItemAnimation(Object, int, float, float, int, int)
+     * @see #addArrayItemAnimation(int[], int, float, float, int, int, int)
      * @see #addVariableAnimation(String, float, float, int, int, int)
      * @see TpAnimatedVariable
      */
-    public TpAnimation addArrayItemAnimation(Object array, int index, float from, float to, int easingFunctionNumber) {
+    public TpAnimation addArrayItemAnimation(int[] array, int index, float from, float to, int easingFunctionNumber) {
         return addVariableAnimation(new TpAnimatedVariable(this, array, index, from, to, easingFunctionNumber));
     }
 
     /**
      * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
-     * The type of the passed array must be declared as <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
-     * in the main scope of your Processing sketch in order to be animated.<br><br>
+     * The type of the passed array must be <code>int[]</code>.
      *
      * @param array the array containing field that will be animated
      * @param index the index of the array item that will be animated
@@ -666,11 +675,115 @@ public class TpAnimation {
      * @param startMillis the start time in animation for value transition
      * @param endMillis the end time in animation for value transition
      * @return the animation object to chain another method calls
-     * @see #addArrayItemAnimation(Object, int, float, float, int, int)
+     * @see #addArrayItemAnimation(int[], int, float, float, int, int, int)
      * @see #addVariableAnimation(String, float, float, int, int, int)
      * @see TpAnimatedVariable
      */
-    public TpAnimation addArrayItemAnimation(Object array, int index, float from, float to, int startMillis, int endMillis) {
+    public TpAnimation addArrayItemAnimation(int[] array, int index, float from, float to, int startMillis, int endMillis) {
+        return addArrayItemAnimation(array, index, from, to, startMillis, endMillis, TpEasing.BASIC_INOUT);
+    }
+
+    /**
+     * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+     * The type of the passed array must be declared as <code>int[]</code>, <code>float[]</code> or <code>double[]</code>
+     * in the main scope of your Processing sketch in order to be animated.<br><br>
+     * Example:<br><br>
+     *<pre><code class="language-processing">
+     *import com.tajnyprojekt.tpanimation.*;
+     *
+     *
+     *TpAnimation animation;<br><br>
+     *
+     *&sol;/ declare your array
+     *int[] params = {1, 0};
+     *
+     *
+     *void setup() {
+     *    ...
+     *    // configure the animation
+     *    animation = new TpAnimation(this, 1000)
+     *        .addArrayItemAnimation(params, 0, 1, 800)
+     *        .addArrayItemAnimation(params, 1, 0, 600, 200, 800, TpEasing.EXPO_IN)
+     *        ;
+     *    ...
+     *}
+     *</code></pre>
+     * <br>
+     * Use <code>startMillis</code> and <code>endMillis</code> when want to animate the variable's value not throughout
+     * the whole animation time but for a certain period.
+     *
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param startMillis the start time in animation for value transition
+     * @param endMillis the end time in animation for value transition
+     * @param easingFunctionNumber the number indicating which easing function to use
+     * @return the animation object to chain another method calls
+     * @see TpEasing available easing functions.
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
+     */
+    public TpAnimation addArrayItemAnimation(int[] array, int index, float from, float to,
+                                            int startMillis, int endMillis, int easingFunctionNumber) {
+        return addVariableAnimation(new TpAnimatedVariable(
+                this, array, index, from, to, startMillis, endMillis, easingFunctionNumber));
+    }
+
+    // float array
+
+    /**
+     * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+     * The type of the passed array must be <code>float[]</code>.
+     *
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @return the animation object to chain another method calls
+     * @see #addArrayItemAnimation(float[], int, float, float, int, int, int)
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
+     */
+    public TpAnimation addArrayItemAnimation(float[] array, int index, float from, float to) {
+        return addArrayItemAnimation(array, index, from, to, TpEasing.BASIC_INOUT);
+    }
+
+    /**
+     * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+     * The type of the passed array must be <code>float[]</code>.
+     *
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param easingFunctionNumber the number indicating which easing function to use
+     * @return the animation object to chain another method calls
+     * @see TpEasing available easing functions.
+     * @see #addArrayItemAnimation(int[], int, float, float, int, int, int)
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
+     */
+    public TpAnimation addArrayItemAnimation(float[] array, int index, float from, float to, int easingFunctionNumber) {
+        return addVariableAnimation(new TpAnimatedVariable(this, array, index, from, to, easingFunctionNumber));
+    }
+
+    /**
+     * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+     * The type of the passed array must be <code>int[]</code>.
+     *
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param startMillis the start time in animation for value transition
+     * @param endMillis the end time in animation for value transition
+     * @return the animation object to chain another method calls
+     * @see #addArrayItemAnimation(float[], int, float, float, int, int, int)
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
+     */
+    public TpAnimation addArrayItemAnimation(float[] array, int index, float from, float to, int startMillis, int endMillis) {
         return addArrayItemAnimation(array, index, from, to, startMillis, endMillis, TpEasing.BASIC_INOUT);
     }
 
@@ -712,14 +825,122 @@ public class TpAnimation {
      * @param easingFunctionNumber the number indicating which easing function to use
      * @return the animation object to chain another method calls
      * @see TpEasing available easing functions.
+     * @see #addArrayItemAnimation(int[], int, float, float, int, int, int)
+     * @see #addArrayItemAnimation(double[], int, float, float, int, int, int)
      * @see #addVariableAnimation(String, float, float, int, int, int)
      * @see TpAnimatedVariable
      */
-    public TpAnimation addArrayItemAnimation(Object array, int index, float from, float to,
-                                            int startMillis, int endMillis, int easingFunctionNumber) {
+    public TpAnimation addArrayItemAnimation(float[] array, int index, float from, float to,
+                                             int startMillis, int endMillis, int easingFunctionNumber) {
         return addVariableAnimation(new TpAnimatedVariable(
                 this, array, index, from, to, startMillis, endMillis, easingFunctionNumber));
     }
+
+    // double array
+
+    /**
+     * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+     * The type of the passed array must be <code>double[]</code>.
+     *
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @return the animation object to chain another method calls
+     * @see #addArrayItemAnimation(double[], int, float, float, int, int, int)
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
+     */
+    public TpAnimation addArrayItemAnimation(double[] array, int index, float from, float to) {
+        return addArrayItemAnimation(array, index, from, to, TpEasing.BASIC_INOUT);
+    }
+
+    /**
+     * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+     * The type of the passed array must be <code>double[]</code>.
+     *
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param easingFunctionNumber the number indicating which easing function to use
+     * @return the animation object to chain another method calls
+     * @see TpEasing available easing functions.
+     * @see #addArrayItemAnimation(double[], int, float, float, int, int, int)
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
+     */
+    public TpAnimation addArrayItemAnimation(double[] array, int index, float from, float to, int easingFunctionNumber) {
+        return addVariableAnimation(new TpAnimatedVariable(this, array, index, from, to, easingFunctionNumber));
+    }
+
+    /**
+     * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+     * The type of the passed array must be <code>double[]</code>.
+     *
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param startMillis the start time in animation for value transition
+     * @param endMillis the end time in animation for value transition
+     * @return the animation object to chain another method calls
+     * @see #addArrayItemAnimation(double[], int, float, float, int, int, int)
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
+     */
+    public TpAnimation addArrayItemAnimation(double[] array, int index, float from, float to, int startMillis, int endMillis) {
+        return addArrayItemAnimation(array, index, from, to, startMillis, endMillis, TpEasing.BASIC_INOUT);
+    }
+
+    /**
+     * Adds the sketch's array item to the animation. The item will be identified by an array and it's index.<br>
+     * The type of the passed array must be <code>double[]</code>.<br><br>
+     * Example:<br><br>
+     *<pre><code class="language-processing">
+     *import com.tajnyprojekt.tpanimation.*;
+     *
+     *
+     *TpAnimation animation;<br><br>
+     *
+     *&sol;/ declare your array
+     *double[] params = {0.2, 0.7};
+     *
+     *
+     *void setup() {
+     *    ...
+     *    // configure the animation
+     *    animation = new TpAnimation(this, 1000)
+     *        .addArrayItemAnimation(params, 0, 1, 100)
+     *        .addArrayItemAnimation(params, 1, 0.1, 3.5, 200, 800, TpEasing.EXPO_IN)
+     *        ;
+     *    ...
+     *}
+     *</code></pre>
+     * <br>
+     * Use <code>startMillis</code> and <code>endMillis</code> when want to animate the variable's value not throughout
+     * the whole animation time but for a certain period.
+     *
+     * @param array the array containing field that will be animated
+     * @param index the index of the array item that will be animated
+     * @param from the initial value for transition
+     * @param to the final value for transition
+     * @param startMillis the start time in animation for value transition
+     * @param endMillis the end time in animation for value transition
+     * @param easingFunctionNumber the number indicating which easing function to use
+     * @return the animation object to chain another method calls
+     * @see TpEasing available easing functions.
+     * @see #addArrayItemAnimation(int[], int, float, float, int, int, int)
+     * @see #addArrayItemAnimation(float[], int, float, float, int, int, int)
+     * @see #addVariableAnimation(String, float, float, int, int, int)
+     * @see TpAnimatedVariable
+     */
+    public TpAnimation addArrayItemAnimation(double[] array, int index, float from, float to,
+                                             int startMillis, int endMillis, int easingFunctionNumber) {
+        return addVariableAnimation(new TpAnimatedVariable(
+                this, array, index, from, to, startMillis, endMillis, easingFunctionNumber));
+    }
+
 
     /**
      * Adds object defining the variable to be animated.<br>
