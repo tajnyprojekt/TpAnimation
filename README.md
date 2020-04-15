@@ -20,4 +20,6 @@ The project is configured with Gradle. To build the library use:
 `gradle jar`, this will also generate and prepare the reference and library.properties.
 After the task is finished, the `./tpanimation` directory is ready to be installed in Processing libraries.
 
+## License
+This project is licensed under the terms of the MIT license.
 
