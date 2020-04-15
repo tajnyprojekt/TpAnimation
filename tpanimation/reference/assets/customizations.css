@@ -100,6 +100,7 @@ input.gsc-input {
   font-size: 3.45em;
   margin: 1em auto 1em auto;
   text-align: center;
+  word-break: break-all;
 }
 
 #jd-content h2 {
